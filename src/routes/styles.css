@@ -1,0 +1,165 @@
+/**
+ * Fonts
+ */
+@font-face {
+	font-display: swap;
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 400;
+	src:
+		url("/fonts/poppins-v20-latin-400.woff2") format("woff2"),
+		url("/fonts/poppins-v20-latin-400.woff") format("woff");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 700;
+	src:
+		url("/fonts/poppins-v20-latin-700.woff2") format("woff2"),
+		url("/fonts/poppins-v20-latin-700.woff") format("woff");
+}
+
+/**
+ * Variables
+ */
+:root {
+	--font-main: "Poppins", Avenir, Helvetica, Arial, sans-serif;
+
+	--white-rich: #fff;
+	--white: #f3f3f5;
+	--gray-050: #ededf0;
+	--gray-100: #e1e1e6;
+	--gray-150: #d2d2da;
+	--gray-200: #c3c3ce;
+	--gray-300: #a4a6b5;
+	--gray-400: #86889d;
+	--gray-500: #686a84;
+	--gray-600: #585a70;
+	--gray-650: #515266;
+	--gray-700: #494a5c;
+	--gray-750: #414253;
+	--gray-800: #393a49;
+	--gray-850: #31323f;
+	--gray-900: #2a2a35;
+	--gray-950: #22222b;
+	--black: #15151a;
+	--black-rich: #000;
+}
+
+/**
+ * Reset styles.
+ */
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+/* Reset margins and paddings on most elements */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+p,
+pre,
+blockquote,
+figure,
+hr {
+	margin: 0;
+	padding: 0;
+}
+
+::selection {
+	color: var(--white);
+	background: #ff3e00;
+}
+
+a {
+	color: #ff3e00;
+	text-underline-offset: 0.1875em;
+	outline: 1px dotted transparent;
+}
+
+a:focus,
+a:hover {
+	text-decoration-thickness: 0.125em;
+}
+
+a:focus-visible {
+	outline: 1px dotted currentColor;
+}
+
+/* Reset forms and buttons */
+input,
+textarea,
+select,
+button {
+	color: inherit;
+	font: inherit;
+	letter-spacing: inherit;
+}
+
+input,
+textarea,
+button {
+	border: 1px solid gray;
+}
+
+button {
+	border-radius: 0;
+	padding: 0.75em 1em;
+	background-color: transparent;
+}
+
+button * {
+	pointer-events: none;
+}
+
+/* Easy responsive for media elements */
+embed,
+iframe,
+img,
+object,
+video {
+	display: block;
+	max-width: 100%;
+}
+
+/* Useful table styles */
+table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+/**
+ * Base styles.
+ */
+body {
+	font-family: var(--font-main);
+	font-size: 1rem;
+	color: var(--gray-600);
+	background-color: var(--gray-100);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+}
+
+.app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
