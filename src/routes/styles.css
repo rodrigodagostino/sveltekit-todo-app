@@ -15,10 +15,30 @@
 	font-display: swap;
 	font-family: "Poppins";
 	font-style: normal;
+	font-weight: 600;
+	src:
+		url("/fonts/poppins-v20-latin-600.woff2") format("woff2"),
+		url("/fonts/poppins-v20-latin-600.woff") format("woff");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Poppins";
+	font-style: normal;
 	font-weight: 700;
 	src:
 		url("/fonts/poppins-v20-latin-700.woff2") format("woff2"),
 		url("/fonts/poppins-v20-latin-700.woff") format("woff");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 900;
+	src:
+		url("/fonts/poppins-v20-latin-900.woff2") format("woff2"),
+		url("/fonts/poppins-v20-latin-900.woff") format("woff");
 }
 
 /**
@@ -26,6 +46,20 @@
  */
 :root {
 	--font-main: "Poppins", Avenir, Helvetica, Arial, sans-serif;
+
+	--indigo-050: #eef2ff;
+	--indigo-100: #e0e7ff;
+	--indigo-200: #c7d2fe;
+	--indigo-300: #a5b4fc;
+	--indigo-400: #818cf8;
+	--indigo-500: #6366f1;
+	--indigo-600: #4f46e5;
+	--indigo-700: #4338ca;
+	--indigo-800: #3730a3;
+	--indigo-900: #312e81;
+
+	--green-500: #22c55e;
+	--red-500: #ef4444;
 
 	--white-rich: #fff;
 	--white: #f3f3f5;
@@ -83,22 +117,17 @@ hr {
 
 ::selection {
 	color: var(--white);
-	background: #ff3e00;
+	background: var(--indigo-600);
 }
 
 a {
-	color: #ff3e00;
-	text-underline-offset: 0.1875em;
+	color: var(--white);
+	transition: outline 0.24s;
 	outline: 1px dotted transparent;
 }
 
-a:focus,
-a:hover {
-	text-decoration-thickness: 0.125em;
-}
-
-a:focus-visible {
-	outline: 1px dotted currentColor;
+a:focus {
+	outline: 1px dotted var(--white);
 }
 
 /* Reset forms and buttons */
@@ -115,16 +144,13 @@ input,
 textarea,
 button {
 	border: 1px solid gray;
+	min-width: 0;
 }
 
 button {
 	border-radius: 0;
 	padding: 0.75em 1em;
 	background-color: transparent;
-}
-
-button * {
-	pointer-events: none;
 }
 
 /* Easy responsive for media elements */
@@ -148,12 +174,10 @@ table {
  */
 body {
 	font-family: var(--font-main);
-	font-size: 1rem;
-	color: var(--gray-600);
-	background-color: var(--gray-100);
+	color: var(--gray-800);
+	background-color: var(--indigo-400);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
 	display: flex;
 	justify-content: center;
 }
@@ -161,5 +185,6 @@ body {
 .app {
 	display: flex;
 	flex-direction: column;
+	max-width: 100%;
 	min-height: 100vh;
 }

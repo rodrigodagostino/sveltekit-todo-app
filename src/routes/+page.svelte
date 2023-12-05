@@ -1,54 +1,78 @@
 <script lang="ts">
+	import { todos } from '$lib/stores/todos';
+	import { t } from '$lib/translations';
+
 	import './styles.css';
-	import svelteLogo from '$assets/images/svelte-logo.svg';
+	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
+	import Navigation from '$lib/components/Navigation.svelte';
+	import List from '$lib/components/List.svelte';
+	import NoListsMessage from '$lib/components/NoListsMessage.svelte';
+	import Notifications from '$lib/components/Notifications.svelte';
 </script>
 
 <svelte:head>
-	<title>Welcome to SvelteKit</title>
+	<title>SvelteKit To-Do App</title>
 </svelte:head>
 
+<header class="app-header">
+	<div class="container">
+		<h1 class="app-title">{$t('home.appTitle')}</h1>
+	</div>
+</header>
 <main class="app-main">
 	<div class="container">
-		<div>
-			<a href="https://kit.svelte.dev" target="_blank" rel="noreferrer">
-				<img src={svelteLogo} alt="SvelteKit" />
-			</a>
-		</div>
-		<h1>Welcome to SvelteKit</h1>
-		<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation.</p>
+		<Navigation />
+		{#if !$todos.lists.length}
+			<NoListsMessage />
+		{:else}
+			{#each $todos.lists as list (list.id)}
+				{#if $todos.selectedListId === list.id}
+					<List id={list.id} title={list.title} tasks={list.tasks} />
+				{/if}
+			{/each}
+		{/if}
 	</div>
 </main>
 <footer class="app-footer">
 	<div class="container">
 		<a
-			href="https://github.com/rodrigodagostino/vite-svelte-ts-template"
+			href="https://github.com/rodrigodagostino/sveltekit-todo-app"
 			target="_blank"
 			rel="noreferrer"
 		>
-			Made with <img src={svelteLogo} alt="SvelteKit" /> by Rodrigo D’Agostino
+			Made with <img src={svelteLogo} alt="Svelte.js logo" /> by Rodrigo D’Agostino
 		</a>
 	</div>
 </footer>
+<Notifications />
 
 <style lang="scss">
 	.container {
-		max-width: 54rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		grid-gap: 3rem 2rem;
+		align-items: start;
+		max-width: 52rem;
+		padding: 1.25rem;
 		margin: 0 auto;
-		padding: 1rem;
 		position: relative;
 	}
 
-	.app-main {
-		margin-top: 24vh;
-
-		img {
-			width: 6rem;
-			height: auto;
-			margin: 0 auto;
+	.app-header {
+		.container {
+			display: block;
 		}
 
-		h1 {
-			margin: 2rem 0 1rem;
+		.app-title {
+			margin-bottom: -0.5em;
+			font-size: clamp(2rem, 10vw, 5.8125rem);
+			font-weight: 900;
+			color: var(--indigo-600);
+			text-align: center;
+			text-transform: uppercase;
+			white-space: nowrap;
+			opacity: 0.4;
+			user-select: none;
 		}
 	}
 
@@ -64,12 +88,13 @@
 		}
 
 		a {
-			display: flex;
-			color: var(--gray-400);
+			color: var(--gray-150);
+			text-decoration: none;
+			transition: color 0.24s;
 
 			&:focus,
 			&:hover {
-				color: var(--gray-600);
+				color: var(--white-rich);
 			}
 		}
 
@@ -79,6 +104,14 @@
 			vertical-align: middle;
 			margin: 0 0.25rem;
 			display: inline-block;
+		}
+	}
+
+	@media screen and (min-width: 48em) {
+		.app-main {
+			.container {
+				grid-template-columns: 18rem minmax(0, 29.5rem);
+			}
 		}
 	}
 </style>
