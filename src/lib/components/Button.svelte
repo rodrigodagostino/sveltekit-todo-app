@@ -25,6 +25,7 @@
 	{href}
 	{target}
 	{type}
+	role={!href ? 'button' : undefined}
 	on:click
 >
 	{#if icon}
@@ -33,6 +34,11 @@
 	{#if $$slots.default}
 		<span class="button__text">
 			<slot />
+		</span>
+	{/if}
+	{#if $$slots['sr-only']}
+		<span class="sr-only">
+			<slot name="sr-only" />
 		</span>
 	{/if}
 </svelte:element>
