@@ -1,17 +1,27 @@
 import i18n, { type Config } from 'sveltekit-i18n';
+import lang from './lang.json';
 
-const config: Config = {
+interface Params {
+	remainingTasks?: number | null;
+	image?: string;
+}
+
+const config: Config<Params> = {
+	translations: {
+		en: { lang },
+		es: { lang },
+	},
 	loaders: [
 		{
 			locale: 'en',
 			key: 'home',
-			routes: ['/'], // you can use regexes as well!
+			routes: ['/'],
 			loader: async () => (await import('./en/home.json')).default,
 		},
 		{
 			locale: 'es',
 			key: 'home',
-			routes: ['/'], // you can use regexes as well!
+			routes: ['/'],
 			loader: async () => (await import('./es/home.json')).default,
 		},
 	],

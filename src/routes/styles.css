@@ -185,8 +185,10 @@ body {
 .app {
 	display: flex;
 	flex-direction: column;
+	gap: 1.25rem;
 	max-width: 100%;
 	min-height: 100vh;
+	padding-top: 1.75rem;
 }
 
 .sr-only {
@@ -199,4 +201,10 @@ body {
 	clip: rect(0, 0, 0, 0);
 	white-space: nowrap;
 	border-width: 0;
+}
+
+@media screen and (min-width: 48em) {
+	.app {
+		padding-top: 2.5rem;
+	}
 }

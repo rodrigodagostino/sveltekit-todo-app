@@ -2,7 +2,6 @@
 	import { todos } from '$lib/stores/todos';
 	import { t } from '$lib/translations';
 
-	import './styles.css';
 	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import List from '$lib/components/List.svelte';
@@ -16,7 +15,7 @@
 
 <header class="app-header">
 	<div class="container">
-		<h1 class="app-title">{$t('home.appTitle')}</h1>
+		<h1 class="app-title">{$t('home.title')}</h1>
 	</div>
 </header>
 <main class="app-main">
@@ -40,39 +39,44 @@
 			target="_blank"
 			rel="noreferrer"
 		>
-			Made with <img src={svelteLogo} alt="Svelte.js logo" /> by Rodrigo D’Agostino
+			{@html $t('home.footer', { image: `<img src=${svelteLogo} alt="SvelteKit" />` })}
 		</a>
 	</div>
 </footer>
+
 <Notifications />
 
 <style lang="scss">
 	.container {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		grid-gap: 3rem 2rem;
-		align-items: start;
 		max-width: 52rem;
-		padding: 1.25rem;
-		margin: 0 auto;
+		padding-inline: 1.25rem;
+		margin-inline: auto;
 		position: relative;
 	}
 
 	.app-header {
-		.container {
-			display: block;
-		}
-
 		.app-title {
-			margin-bottom: -0.5em;
 			font-size: clamp(2rem, 10vw, 5.8125rem);
 			font-weight: 900;
 			color: var(--indigo-600);
+			line-height: 1;
 			text-align: center;
 			text-transform: uppercase;
-			white-space: nowrap;
 			opacity: 0.4;
 			user-select: none;
+
+			:global(html[lang='es']) & {
+				font-size: clamp(2rem, 10vw, 4.375rem);
+			}
+		}
+	}
+
+	.app-main {
+		.container {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr);
+			grid-gap: 3rem 2rem;
+			align-items: start;
 		}
 	}
 
@@ -98,7 +102,7 @@
 			}
 		}
 
-		img {
+		:global(img) {
 			height: 1.25rem;
 			width: auto;
 			vertical-align: middle;

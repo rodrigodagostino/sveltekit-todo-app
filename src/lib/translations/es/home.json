@@ -1,4 +1,14 @@
 {
-  "appTitle": "Mis Listas de Tareas",
-  "noListsMessage": "¡Crea tu primera lista para comenzar!"
+	"title": "Mis Listas de Tareas",
+	"addList": "Agregar lista",
+	"editList": "Editar lista",
+	"removeList": "Eliminar lista",
+	"addTask": "Agregar tarea",
+	"editTask": "Editar tarea",
+	"removeTask": "Eliminar tarea",
+	"confirmChanges": "Confirmar cambios",
+	"cancelChanges": "Cancelar cambios",
+	"tasksRemaining": "{{remainingTasks:gt; 0:{{remainingTasks}} {{remainingTasks; 1:tarea pendiente; default:tareas pendientes}}; default:No hay tareas pendientes}}",
+	"noListsMessage": "¡Crea tu primera lista para comenzar!",
+	"footer": "Hecho con {{image}} por Rodrigo D’Agostino"
 }

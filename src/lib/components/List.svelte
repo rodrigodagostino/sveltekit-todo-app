@@ -12,6 +12,7 @@
 	import Sortable, { type SortableOptions } from 'sortablejs';
 	import { fade, fly } from 'svelte/transition';
 	import { fadeScale, flyScale } from '$lib/transitions';
+	import { t } from '$lib/translations';
 	import { addTask, editList, editListTitle, removeList } from '$lib/stores/todos';
 
 	import Button from './Button.svelte';
@@ -23,12 +24,11 @@
 	let titleRef: HTMLHeadingElement;
 
 	let isListBeingEdited = false;
-	let remainingTasks: string | null = null;
+	let remainingTasks: number | null = null;
 	$: {
-		const remaining = tasks.length
+		remainingTasks = tasks.length
 			? tasks.reduce((total, currentValue) => (!currentValue.isDone ? total + 1 : total), 0)
 			: 0;
-		remainingTasks = `${remaining} task${remaining !== 1 ? 's' : ''} remaining`;
 	}
 	let taskNewTitle: string = '';
 	let titlePrevContent: string;
@@ -116,19 +116,27 @@
 			</h2>
 			{#if isListBeingEdited}
 				<div class="list__actions">
-					<Button variant="ghost" icon="check" on:click={() => handleTitleChanges('confirm')} />
-					<Button variant="ghost" icon="times" on:click={() => handleTitleChanges('cancel')} />
+					<Button variant="ghost" icon="check" on:click={() => handleTitleChanges('confirm')}>
+						<svelte:fragment slot="sr-only">{$t('home.confirmChanges')}</svelte:fragment>
+					</Button>
+					<Button variant="ghost" icon="times" on:click={() => handleTitleChanges('cancel')}>
+						<svelte:fragment slot="sr-only">{$t('home.cancelChanges')}</svelte:fragment>
+					</Button>
 				</div>
 			{:else}
 				<div class="list__actions">
-					<Button variant="ghost" icon="pen" on:click={triggerTitleEdit} />
-					<Button variant="ghost" icon="trash-can" on:click={() => removeList(id)} />
+					<Button variant="ghost" icon="pen" on:click={triggerTitleEdit}>
+						<svelte:fragment slot="sr-only">{$t('home.editList')}</svelte:fragment>
+					</Button>
+					<Button variant="ghost" icon="trash-can" on:click={() => removeList(id)}>
+						<svelte:fragment slot="sr-only">{$t('home.removeList')}</svelte:fragment>
+					</Button>
 				</div>
 			{/if}
 		</div>
 		{#if tasks.length}
 			<div class="list__header-bottom" transition:fadeScale={{ duration: 320 }}>
-				<p class="list__subhead">{remainingTasks}</p>
+				<p class="list__subhead">{$t('home.tasksRemaining', { remainingTasks: remainingTasks })}</p>
 			</div>
 		{/if}
 	</header>
@@ -148,7 +156,9 @@
 		</ul>
 		<form class="list__form" on:submit|preventDefault={handleAddTask}>
 			<input type="text" class="list__form-input" bind:value={taskNewTitle} />
-			<Button variant="ghost" type="submit" icon="plus" />
+			<Button variant="ghost" type="submit" icon="plus">
+				<svelte:fragment slot="sr-only">{$t('home.addTask')}</svelte:fragment>
+			</Button>
 		</form>
 	</div>
 </section>

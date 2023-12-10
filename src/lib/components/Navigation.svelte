@@ -2,6 +2,7 @@
 	import Sortable, { type SortableOptions } from 'sortablejs';
 	import { fly } from 'svelte/transition';
 	import { fadeScale, flyScale } from '$lib/transitions';
+	import { t } from '$lib/translations';
 	import { addList, setLists, setSelectedList, todos } from '$lib/stores/todos';
 
 	import Button from './Button.svelte';
@@ -73,7 +74,9 @@
 	</ul>
 	<form class="navigation__form" on:submit|preventDefault={handleAddList}>
 		<input type="text" class="navigation__form-input" bind:value={listNewTitle} />
-		<Button variant="ghost-negative" type="submit" icon="plus" />
+		<Button variant="ghost-negative" type="submit" icon="plus">
+			<svelte:fragment slot="sr-only">{$t('home.addList')}</svelte:fragment>
+		</Button>
 	</form>
 </nav>
 
