@@ -188,7 +188,7 @@ body {
 	gap: 1.25rem;
 	max-width: 100%;
 	min-height: 100vh;
-	padding-top: 1.75rem;
+	padding-top: 0.5rem;
 }
 
 .sr-only {
@@ -205,6 +205,6 @@ body {
 
 @media screen and (min-width: 48em) {
 	.app {
-		padding-top: 2.5rem;
+		padding-top: 1rem;
 	}
 }

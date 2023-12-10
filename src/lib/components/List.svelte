@@ -166,7 +166,7 @@
 <style lang="scss">
 	.list {
 		grid-column: 1;
-		grid-row: 2;
+		grid-row: 3;
 		background-color: var(--white);
 		max-width: 100%;
 		overflow: hidden;
@@ -253,7 +253,7 @@
 	@media screen and (min-width: 48em) {
 		.list {
 			grid-column: 2;
-			grid-row: 1;
+			grid-row: 2;
 		}
 	}
 </style>

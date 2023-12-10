@@ -32,7 +32,7 @@
 
 	.no-lists-message {
 		grid-column: 1;
-		grid-row: 2;
+		grid-row: 3;
 		text-align: center;
 
 		&__arrow {
@@ -58,7 +58,7 @@
 	@media screen and (min-width: 48em) {
 		.no-lists-message {
 			grid-column: 2;
-			grid-row: 1;
+			grid-row: 2;
 			text-align: left;
 
 			&__arrow {

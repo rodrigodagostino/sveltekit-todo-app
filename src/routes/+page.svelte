@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { todos } from '$lib/stores/todos';
-	import { t } from '$lib/translations';
+	import { t, locale, locales } from '$lib/translations';
 
 	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
+	import Button from '$lib/components/Button.svelte';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import List from '$lib/components/List.svelte';
 	import NoListsMessage from '$lib/components/NoListsMessage.svelte';
@@ -15,11 +17,26 @@
 
 <header class="app-header">
 	<div class="container">
-		<h1 class="app-title">{$t('home.title')}</h1>
+		<nav class="app-nav">
+			{#each $locales as value}
+				{#if value !== $locale}
+					<form method="POST" action="?/setLocale" use:enhance>
+						<input type="hidden" name="locale" {value} />
+						<Button type="submit" variant="ghost-negative">
+							{$t(`lang.${value}`)}
+							<svelte:fragment slot="sr-only">
+								{$t('home.switchLanguage', { lang: value })}
+							</svelte:fragment>
+						</Button>
+					</form>
+				{/if}
+			{/each}
+		</nav>
 	</div>
 </header>
 <main class="app-main">
 	<div class="container">
+		<h1 class="app-title">{$t('home.title')}</h1>
 		<Navigation />
 		{#if !$todos.lists.length}
 			<NoListsMessage />
@@ -54,21 +71,23 @@
 		position: relative;
 	}
 
-	.app-header {
-		.app-title {
-			font-size: clamp(2rem, 10vw, 5.8125rem);
-			font-weight: 900;
-			color: var(--indigo-600);
-			line-height: 1;
-			text-align: center;
-			text-transform: uppercase;
-			opacity: 0.4;
-			user-select: none;
+	.app-nav {
+		display: flex;
+		justify-content: end;
+		gap: 1rem;
+	}
 
-			:global(html[lang='es']) & {
-				font-size: clamp(2rem, 10vw, 4.375rem);
-			}
-		}
+	.app-title {
+		grid-column: 1/-1;
+		margin-bottom: -1.5rem;
+		font-size: clamp(2rem, 10vw, 4.375rem);
+		font-weight: 900;
+		color: var(--indigo-600);
+		line-height: 1;
+		text-align: center;
+		text-transform: uppercase;
+		opacity: 0.4;
+		user-select: none;
 	}
 
 	.app-main {
@@ -112,6 +131,10 @@
 	}
 
 	@media screen and (min-width: 48em) {
+		.app-title {
+			margin-bottom: -2rem;
+		}
+
 		.app-main {
 			.container {
 				grid-template-columns: 18rem minmax(0, 29.5rem);

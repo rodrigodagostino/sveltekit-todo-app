@@ -1,5 +1,6 @@
 {
 	"title": "My To-Do Lists",
+	"switchLanguage": "Switch language to {{lang; es:Spanish; default:English}}",
 	"addList": "Add list",
 	"editList": "Edit list",
 	"removeList": "Remove list",

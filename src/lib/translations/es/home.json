@@ -1,5 +1,6 @@
 {
 	"title": "Mis Listas de Tareas",
+	"switchLanguage": "Cambiar idioma a {{lang; es:Español; default:Inglés}}",
 	"addList": "Agregar lista",
 	"editList": "Editar lista",
 	"removeList": "Eliminar lista",
