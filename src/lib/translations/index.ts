@@ -1,9 +1,11 @@
 import i18n, { type Config } from 'sveltekit-i18n';
 import lang from './lang.json';
 
-interface Params {
+export interface Params {
 	lang?: 'en' | 'es';
 	remainingTasks?: number | null;
+	itemType?: 'list' | 'task';
+	itemTitle?: string;
 	image?: string;
 }
 

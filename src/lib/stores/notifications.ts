@@ -1,5 +1,6 @@
 import { writable, get } from 'svelte/store';
 import type { Notification } from '$lib/components/Notification.svelte';
+import { t, type Params } from '$lib/translations';
 
 export const notifications = writable<Notification[]>([]);
 
@@ -14,8 +15,11 @@ export const addNotification = (
 		...currData,
 		{
 			id: notificationId,
-			type: type,
-			text: `${titleCasedType} <strong>${currentItem.title}</strong> was removed.`,
+			type,
+			text: t.get('home.notificationMessage', {
+				itemType: titleCasedType as Params['itemType'],
+				itemTitle: currentItem.title,
+			}),
 			backup: currentItem,
 		},
 	]);

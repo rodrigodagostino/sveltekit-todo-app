@@ -11,9 +11,10 @@
 </script>
 
 <script lang="ts">
-	import { fadeScale, flyScale } from '$lib/transitions';
 	import { addList, addTask } from '$lib/stores/todos';
 	import { removeNotification } from '$lib/stores/notifications';
+	import { fadeScale, flyScale } from '$lib/transitions';
+	import { t } from '$lib/translations';
 
 	import Button from './Button.svelte';
 
@@ -37,12 +38,11 @@
 	out:fadeScale={{ duration: 320 }}
 >
 	<div class="notification__inner">
-		<p class="notification__text" role="status">
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			{@html text}
-		</p>
-		<Button variant="neutral-dark" on:click|once={undoRemoval}>Undo</Button>
-		<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)} />
+		<p class="notification__text" role="status">{@html text}</p>
+		<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('home.undoRemoval')}</Button>
+		<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)}>
+			<svelte:fragment slot="sr-only">{$t('home.closeNotification')}</svelte:fragment>
+		</Button>
 	</div>
 </div>
 
