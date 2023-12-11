@@ -43,7 +43,7 @@
 		{:else}
 			{#each $todos.lists as list (list.id)}
 				{#if $todos.selectedListId === list.id}
-					<List id={list.id} title={list.title} tasks={list.tasks} />
+					<List id={list.id} position={list.position} title={list.title} tasks={list.tasks} />
 				{/if}
 			{/each}
 		{/if}

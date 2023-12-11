@@ -19,6 +19,9 @@ devDependencies:
   '@sveltejs/kit':
     specifier: 1.27.6
     version: 1.27.6(svelte@4.2.8)(vite@5.0.5)
+  '@types/lodash.clonedeep':
+    specifier: 4.5.9
+    version: 4.5.9
   '@types/sortablejs':
     specifier: 1.15.7
     version: 1.15.7
@@ -40,6 +43,9 @@ devDependencies:
   eslint-plugin-svelte:
     specifier: 2.35.1
     version: 2.35.1(eslint@8.55.0)(svelte@4.2.8)
+  lodash.clonedeep:
+    specifier: 4.5.0
+    version: 4.5.0
   prettier:
     specifier: 3.1.0
     version: 3.1.0
@@ -594,6 +600,16 @@ packages:
 
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
+    dev: true
+
+  /@types/lodash.clonedeep@4.5.9:
+    resolution: {integrity: sha512-19429mWC+FyaAhOLzsS8kZUsI+/GmBAQ0HFiCPsKGU+7pBXOQWhyrY6xNNDwUSX8SMZMJvuFVMF9O5dQOlQK9Q==}
+    dependencies:
+      '@types/lodash': 4.14.202
+    dev: true
+
+  /@types/lodash@4.14.202:
+    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: true
 
   /@types/pug@2.0.6:
@@ -1555,6 +1571,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: true
 
   /lodash.merge@4.6.2:

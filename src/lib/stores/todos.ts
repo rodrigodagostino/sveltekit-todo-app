@@ -1,8 +1,8 @@
 import { writable, get } from 'svelte/store';
+import { browser } from '$app/environment';
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
 import { addNotification } from './notifications';
-import { browser } from '$app/environment';
 
 interface ITodos {
 	lists: IList[];
@@ -45,6 +45,7 @@ export const addList = (newList: IList) => {
 	const unsubscribe = todos.subscribe((currData) => ($toDos = currData));
 
 	const newLists = [...$toDos.lists, newList];
+
 	setLists(newLists);
 	// Select the recently created list.
 	setSelectedList($toDos.lists[$toDos.lists.length - 1].id);
@@ -58,6 +59,7 @@ export const editList = (listId: IList['id'], newList: IList) => {
 	const newLists = $toDos.lists;
 	const targetListIndex = newLists.findIndex((list) => list.id === listId);
 	newLists[targetListIndex] = newList;
+
 	setLists(newLists);
 };
 
@@ -67,6 +69,7 @@ export const editListTitle = (listId: IList['id'], newListTitle: IList['title'])
 	const newLists = $toDos.lists;
 	const targetListIndex = newLists.findIndex((list) => list.id === listId);
 	newLists[targetListIndex].title = newListTitle;
+
 	setLists(newLists);
 };
 
@@ -88,16 +91,23 @@ export const removeList = (listId: IList['id']) => {
 		setSelectedList(null);
 	}
 
-	const newLists = $toDos.lists.filter((list) => list.id !== listId);
+	const newLists = $toDos.lists
+		.filter((list) => list.id !== listId)
+		.map((list, i) => ({
+			...list,
+			position: i + 1,
+		}));
+
 	setLists(newLists);
 };
 
 export const addTask = (listId: IList['id'], newTask: ITask) => {
 	const $toDos = get(todos);
 
-	const newLists: IList[] = $toDos.lists;
+	const newLists = $toDos.lists;
 	const targetListIndex = newLists.findIndex((list) => list.id === listId);
 	newLists[targetListIndex].tasks.push(newTask);
+
 	setLists(newLists);
 };
 
@@ -114,6 +124,7 @@ export const editTask = (
 		(task: ITask) => task.id === taskId
 	);
 	newLists[targetListIndex].tasks[targetTaskIndex].title = newTaskTitle;
+
 	setLists(newLists);
 };
 
@@ -127,6 +138,7 @@ export const toggleTaskStatus = (listId: IList['id'], taskId: ITask['id']) => {
 	);
 	newLists[targetListIndex].tasks[targetTaskIndex].isDone =
 		!newLists[targetListIndex].tasks[targetTaskIndex].isDone;
+
 	setLists(newLists);
 };
 
@@ -139,6 +151,7 @@ export const removeTask = (listId: IList['id'], taskId: ITask['id']) => {
 	addNotification('task', {
 		listId,
 		id: currentTask.id,
+		position: currentTask.position,
 		title: currentTask.title,
 		isDone: currentTask.isDone,
 	});
@@ -149,5 +162,7 @@ export const removeTask = (listId: IList['id'], taskId: ITask['id']) => {
 		(task: ITask) => task.id === taskId
 	);
 	newLists[targetListIndex].tasks.splice(targetTaskIndex, 1);
+	newLists[targetListIndex].tasks.forEach((task, i) => (task.position = i + 1));
+
 	setLists(newLists);
 };

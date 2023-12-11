@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	import { addList, addTask } from '$lib/stores/todos';
+	import { addList, addTask, todos } from '$lib/stores/todos';
 	import { removeNotification } from '$lib/stores/notifications';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
@@ -25,8 +25,12 @@
 
 	const undoRemoval = () => {
 		type === 'list' && !backup.hasOwnProperty('listId')
-			? addList(backup as IList)
-			: addTask((backup as ITask).listId, backup as ITask);
+			? addList({ ...backup, position: $todos.lists.length + 1 } as IList)
+			: addTask((backup as ITask).listId, {
+					...backup,
+					position:
+						$todos.lists.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
+			  } as ITask);
 		removeNotification(id);
 	};
 </script>

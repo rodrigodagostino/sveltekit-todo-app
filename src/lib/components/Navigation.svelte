@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Sortable, { type SortableOptions } from 'sortablejs';
+	import cloneDeep from 'lodash.clonedeep';
 	import { fly } from 'svelte/transition';
+	import { addList, setLists, setSelectedList, todos } from '$lib/stores/todos';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
-	import { addList, setLists, setSelectedList, todos } from '$lib/stores/todos';
 
 	import Button from './Button.svelte';
 	import Icon from './Icon.svelte';
@@ -15,6 +16,7 @@
 
 		addList({
 			id: new Date().getTime(),
+			position: +$todos.lists.length + 1 || 1,
 			title: listNewTitle,
 			tasks: [],
 		});
@@ -34,9 +36,14 @@
 			},
 			set: (sortable) => {
 				const order = sortable.toArray();
-				const reorderedLists = $todos.lists.sort(
-					(a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`)
-				);
+				const reorderedLists = cloneDeep($todos.lists)
+					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
+					.map((list, i) => {
+						return {
+							...list,
+							position: i + 1,
+						};
+					});
 				setLists(reorderedLists);
 			},
 		},

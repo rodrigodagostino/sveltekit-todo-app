@@ -2,6 +2,7 @@
 	export interface ITask {
 		listId: number;
 		id: number;
+		position: number;
 		title: string;
 		isDone: boolean;
 	}
@@ -16,6 +17,7 @@
 
 	export let listId: ITask['listId'];
 	export let id: ITask['id'];
+	export let position: ITask['position'];
 	export let title: ITask['title'];
 	export let isDone: ITask['isDone'];
 

@@ -3,6 +3,7 @@
 
 	export interface IList {
 		id: number;
+		position: number;
 		title: string;
 		tasks: ITask[];
 	}
@@ -10,6 +11,7 @@
 
 <script lang="ts">
 	import Sortable, { type SortableOptions } from 'sortablejs';
+	import cloneDeep from 'lodash.clonedeep';
 	import { fade, fly } from 'svelte/transition';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
@@ -18,6 +20,7 @@
 	import Button from './Button.svelte';
 
 	export let id: IList['id'];
+	export let position: IList['position'];
 	export let title: IList['title'];
 	export let tasks: IList['tasks'];
 
@@ -65,6 +68,7 @@
 		addTask(id, {
 			listId: id,
 			id: new Date().getTime(),
+			position: +tasks.length + 1 || 1,
 			title: taskNewTitle,
 			isDone: false,
 		});
@@ -84,10 +88,15 @@
 			},
 			set: (sortable) => {
 				const order = sortable.toArray();
-				const reorderedTasks = tasks.sort(
-					(a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`)
-				);
-				const reorderedList = { id, title, tasks: reorderedTasks };
+				const reorderedTasks = cloneDeep(tasks)
+					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
+					.map((task, i) => {
+						return {
+							...task,
+							position: i + 1,
+						};
+					});
+				const reorderedList = { id, position, title, tasks: reorderedTasks };
 				editList(id, reorderedList);
 			},
 		},
@@ -150,7 +159,13 @@
 					in:flyScale={{ y: 64, duration: 320 }}
 					out:fadeScale={{ duration: 320 }}
 				>
-					<Task listId={id} id={task.id} title={task.title} isDone={task.isDone} />
+					<Task
+						listId={id}
+						id={task.id}
+						position={task.position}
+						title={task.title}
+						isDone={task.isDone}
+					/>
 				</li>
 			{/each}
 		</ul>
