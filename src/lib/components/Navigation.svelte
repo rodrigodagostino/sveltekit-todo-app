@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Sortable, { type SortableOptions } from 'sortablejs';
 	import cloneDeep from 'lodash.clonedeep';
+
 	import { fly } from 'svelte/transition';
-	import { addList, setLists, setSelectedList, todos } from '$lib/stores/todos';
+	import { addList, selectedListId, setLists, todos } from '$lib/stores/todos';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -16,7 +17,7 @@
 
 		addList({
 			id: new Date().getTime(),
-			position: +$todos.lists.length + 1 || 1,
+			position: +$todos.length + 1 || 1,
 			title: listNewTitle,
 			tasks: [],
 		});
@@ -31,12 +32,12 @@
 		animation: 200,
 		store: {
 			get: () => {
-				const order = $todos.lists.map((list) => `${list.id}`);
+				const order = $todos.map((list) => `${list.id}`);
 				return order ? order : [];
 			},
 			set: (sortable) => {
 				const order = sortable.toArray();
-				const reorderedLists = cloneDeep($todos.lists)
+				const reorderedLists = cloneDeep($todos)
 					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
 					.map((list, i) => {
 						return {
@@ -62,15 +63,15 @@
 
 <nav class="navigation" in:fly={{ y: 32, duration: 320, delay: 320 }}>
 	<ul class="navigation__items" use:sortable={sortableOptions}>
-		{#each $todos.lists as list (list.id)}
+		{#each $todos as list (list.id)}
 			<li
 				class="navigation__item"
-				class:is-active={list.id === $todos.selectedListId}
+				class:is-active={list.id === $selectedListId}
 				data-id={list.id}
 				in:flyScale={{ y: 64, duration: 320 }}
 				out:fadeScale={{ duration: 320 }}
 			>
-				<button class="navigation__item-button" on:click={() => setSelectedList(list.id)}>
+				<button class="navigation__item-button" on:click={() => ($selectedListId = list.id)}>
 					<span class="navigation__item-handle">
 						<Icon icon="grip-dots-vertical" />
 					</span>
@@ -80,9 +81,15 @@
 		{/each}
 	</ul>
 	<form class="navigation__form" on:submit|preventDefault={handleAddList}>
-		<input type="text" class="navigation__form-input" bind:value={listNewTitle} />
-		<Button variant="ghost-negative" type="submit" icon="plus">
-			<svelte:fragment slot="sr-only">{$t('home.addList')}</svelte:fragment>
+		<input
+			type="text"
+			class="navigation__form-input"
+			name="list-title"
+			bind:value={listNewTitle}
+			required
+		/>
+		<Button type="submit" variant="ghost-negative" icon="plus">
+			<svelte:fragment slot="sr-only">{$t('layout.addList')}</svelte:fragment>
 		</Button>
 	</form>
 </nav>

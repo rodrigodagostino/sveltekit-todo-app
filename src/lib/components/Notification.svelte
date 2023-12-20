@@ -25,12 +25,11 @@
 
 	const undoRemoval = () => {
 		type === 'list' && !backup.hasOwnProperty('listId')
-			? addList({ ...backup, position: $todos.lists.length + 1 } as IList)
+			? addList({ ...backup, position: $todos.length + 1 } as IList)
 			: addTask((backup as ITask).listId, {
 					...backup,
-					position:
-						$todos.lists.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
-			  } as ITask);
+					position: $todos.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
+				} as ITask);
 		removeNotification(id);
 	};
 </script>
@@ -43,9 +42,9 @@
 >
 	<div class="notification__inner">
 		<p class="notification__text" role="status">{@html text}</p>
-		<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('home.undoRemoval')}</Button>
+		<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('layout.undoRemoval')}</Button>
 		<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)}>
-			<svelte:fragment slot="sr-only">{$t('home.closeNotification')}</svelte:fragment>
+			<svelte:fragment slot="sr-only">{$t('layout.closeNotification')}</svelte:fragment>
 		</Button>
 	</div>
 </div>

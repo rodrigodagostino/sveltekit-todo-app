@@ -1,0 +1,10 @@
+{
+	"editList": "Edit list",
+	"removeList": "Remove list",
+	"addTask": "Add task",
+	"editTask": "Edit task",
+	"removeTask": "Remove task",
+	"confirmChanges": "Confirm changes",
+	"cancelChanges": "Cancel changes",
+	"tasksRemaining": "{{remainingTasks:gt; 0:{{remainingTasks}} remaining {{remainingTasks; 1:task; default:tasks}}; default:No remaining tasks}}"
+}

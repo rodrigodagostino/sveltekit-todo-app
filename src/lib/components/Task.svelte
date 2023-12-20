@@ -9,8 +9,8 @@
 </script>
 
 <script lang="ts">
-	import { t } from '$lib/translations';
 	import { editTask, removeTask, toggleTaskStatus } from '$lib/stores/todos';
+	import { t } from '$lib/translations';
 
 	import Button from './Button.svelte';
 	import Icon from './Icon.svelte';
@@ -84,7 +84,7 @@
 				class="task__button-confirm"
 				on:click={() => handleTaskChanges('confirm')}
 			>
-				<svelte:fragment slot="sr-only">{$t('home.confirmChanges')}</svelte:fragment>
+				<svelte:fragment slot="sr-only">{$t('list.confirmChanges')}</svelte:fragment>
 			</Button>
 			<Button
 				variant="ghost"
@@ -92,16 +92,16 @@
 				class="task__button-cancel"
 				on:click={() => handleTaskChanges('cancel')}
 			>
-				<svelte:fragment slot="sr-only">{$t('home.cancelChanges')}</svelte:fragment>
+				<svelte:fragment slot="sr-only">{$t('list.cancelChanges')}</svelte:fragment>
 			</Button>
 		</div>
 	{:else}
 		<div class="task__actions">
 			<Button variant="ghost" icon="pen" on:click={handleEditTask}>
-				<svelte:fragment slot="sr-only">{$t('home.editTask')}</svelte:fragment>
+				<svelte:fragment slot="sr-only">{$t('list.editTask')}</svelte:fragment>
 			</Button>
 			<Button variant="ghost" icon="trash-can" on:click={() => removeTask(listId, id)}>
-				<svelte:fragment slot="sr-only">{$t('home.removeTask')}</svelte:fragment>
+				<svelte:fragment slot="sr-only">{$t('list.removeTask')}</svelte:fragment>
 			</Button>
 		</div>
 	{/if}
@@ -141,16 +141,15 @@
 		&__checkbox,
 		&__label {
 			transition: opacity 0.24s;
-			cursor: pointer;
-		}
-
-		&__checkbox:disabled {
-			cursor: default;
 		}
 
 		&__checkbox {
 			flex-shrink: 0;
 			margin-left: 0.5rem;
+
+			&:disabled {
+				cursor: default;
+			}
 		}
 
 		&__label {

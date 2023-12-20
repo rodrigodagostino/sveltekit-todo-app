@@ -1,144 +1,16 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { todos } from '$lib/stores/todos';
-	import { t, locale, locales } from '$lib/translations';
+	import { selectedListId, todos } from '$lib/stores/todos';
 
-	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
-	import Button from '$lib/components/Button.svelte';
-	import Navigation from '$lib/components/Navigation.svelte';
 	import List from '$lib/components/List.svelte';
 	import NoListsMessage from '$lib/components/NoListsMessage.svelte';
-	import Notifications from '$lib/components/Notifications.svelte';
 </script>
 
-<svelte:head>
-	<title>SvelteKit To-Do App</title>
-</svelte:head>
-
-<header class="app-header">
-	<div class="container">
-		<nav class="app-nav">
-			{#each $locales as value}
-				{#if value !== $locale}
-					<form method="POST" action="?/setLocale" use:enhance>
-						<input type="hidden" name="locale" {value} />
-						<Button type="submit" variant="ghost-negative">
-							{$t(`lang.${value}`)}
-							<svelte:fragment slot="sr-only">
-								{$t('home.switchLanguage', { lang: value })}
-							</svelte:fragment>
-						</Button>
-					</form>
-				{/if}
-			{/each}
-		</nav>
-	</div>
-</header>
-<main class="app-main">
-	<div class="container">
-		<h1 class="app-title">{$t('home.title')}</h1>
-		<Navigation />
-		{#if !$todos.lists.length}
-			<NoListsMessage />
-		{:else}
-			{#each $todos.lists as list (list.id)}
-				{#if $todos.selectedListId === list.id}
-					<List id={list.id} position={list.position} title={list.title} tasks={list.tasks} />
-				{/if}
-			{/each}
+{#if $todos.length}
+	{#each $todos as list (list.id)}
+		{#if $selectedListId === list.id}
+			<List id={list.id} position={list.position} title={list.title} tasks={list.tasks} />
 		{/if}
-	</div>
-</main>
-<footer class="app-footer">
-	<div class="container">
-		<a
-			href="https://github.com/rodrigodagostino/sveltekit-todo-app"
-			target="_blank"
-			rel="noreferrer"
-		>
-			{@html $t('home.footer', { image: `<img src=${svelteLogo} alt="SvelteKit" />` })}
-		</a>
-	</div>
-</footer>
-
-<Notifications />
-
-<style lang="scss">
-	.container {
-		max-width: 52rem;
-		padding-inline: 1.25rem;
-		margin-inline: auto;
-		position: relative;
-	}
-
-	.app-nav {
-		display: flex;
-		justify-content: end;
-		gap: 1rem;
-	}
-
-	.app-title {
-		grid-column: 1/-1;
-		margin-bottom: -1.5rem;
-		font-size: clamp(2rem, 10vw, 4.375rem);
-		font-weight: 900;
-		color: var(--indigo-600);
-		line-height: 1;
-		text-align: center;
-		text-transform: uppercase;
-		opacity: 0.4;
-		user-select: none;
-	}
-
-	.app-main {
-		.container {
-			display: grid;
-			grid-template-columns: minmax(0, 1fr);
-			grid-gap: 3rem 2rem;
-			align-items: start;
-		}
-	}
-
-	.app-footer {
-		font-size: 0.875rem;
-		text-align: center;
-		margin-top: auto;
-
-		.container {
-			display: flex;
-			justify-content: center;
-			padding: 1rem 0;
-		}
-
-		a {
-			color: var(--gray-150);
-			text-decoration: none;
-			transition: color 0.24s;
-
-			&:focus,
-			&:hover {
-				color: var(--white-rich);
-			}
-		}
-
-		:global(img) {
-			height: 1.25rem;
-			width: auto;
-			vertical-align: middle;
-			margin: 0 0.25rem;
-			display: inline-block;
-		}
-	}
-
-	@media screen and (min-width: 48em) {
-		.app-title {
-			margin-bottom: -2rem;
-		}
-
-		.app-main {
-			.container {
-				grid-template-columns: 18rem minmax(0, 29.5rem);
-			}
-		}
-	}
-</style>
+	{/each}
+{:else}
+	<NoListsMessage />
+{/if}

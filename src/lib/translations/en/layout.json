@@ -1,0 +1,9 @@
+{
+	"title": "My To-Do Lists",
+	"switchLanguage": "Switch language to {{lang; es:Spanish; default:English}}",
+	"addList": "Add list",
+	"notificationMessage": "{{itemType; List:List; default:Task}} <strong>{{itemTitle}}</strong> was removed.",
+	"undoRemoval": "Undo",
+	"closeNotification": "Close notification",
+	"footer": "Made with {{image}} by Rodrigo D’Agostino"
+}

@@ -16,7 +16,7 @@ export const addNotification = (
 		{
 			id: notificationId,
 			type,
-			text: t.get('home.notificationMessage', {
+			text: t.get('layout.notificationMessage', {
 				itemType: titleCasedType as Params['itemType'],
 				itemTitle: currentItem.title,
 			}),

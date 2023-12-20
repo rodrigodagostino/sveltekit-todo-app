@@ -1,0 +1,9 @@
+{
+	"title": "Mis Listas de Tareas",
+	"switchLanguage": "Cambiar idioma a {{lang; es:Español; default:Inglés}}",
+	"addList": "Agregar lista",
+	"notificationMessage": "{{itemType; List:Lista; default:Tarea}} <strong>{{itemTitle}}</strong> fue eliminada.",
+	"undoRemoval": "Deshacer",
+	"closeNotification": "Cerrar notificación",
+	"footer": "Hecho con {{image}} por Rodrigo D’Agostino"
+}

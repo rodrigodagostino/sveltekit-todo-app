@@ -1,18 +1,3 @@
 {
-	"title": "Mis Listas de Tareas",
-	"switchLanguage": "Cambiar idioma a {{lang; es:Español; default:Inglés}}",
-	"addList": "Agregar lista",
-	"editList": "Editar lista",
-	"removeList": "Eliminar lista",
-	"addTask": "Agregar tarea",
-	"editTask": "Editar tarea",
-	"removeTask": "Eliminar tarea",
-	"confirmChanges": "Confirmar cambios",
-	"cancelChanges": "Cancelar cambios",
-	"tasksRemaining": "{{remainingTasks:gt; 0:{{remainingTasks}} {{remainingTasks; 1:tarea pendiente; default:tareas pendientes}}; default:No hay tareas pendientes}}",
-	"noListsMessage": "¡Crea tu primera lista para comenzar!",
-	"notificationMessage": "{{itemType; List:Lista; default:Tarea}} <strong>{{itemTitle}}</strong> fue eliminada.",
-	"undoRemoval": "Deshacer",
-	"closeNotification": "Cerrar notificación",
-	"footer": "Hecho con {{image}} por Rodrigo D’Agostino"
+	"noListsMessage": "¡Crea tu primera lista para comenzar!"
 }

@@ -1,18 +1,3 @@
 {
-	"title": "My To-Do Lists",
-	"switchLanguage": "Switch language to {{lang; es:Spanish; default:English}}",
-	"addList": "Add list",
-	"editList": "Edit list",
-	"removeList": "Remove list",
-	"addTask": "Add task",
-	"editTask": "Edit task",
-	"removeTask": "Remove task",
-	"confirmChanges": "Confirm changes",
-	"cancelChanges": "Cancel changes",
-	"tasksRemaining": "{{remainingTasks:gt; 0:{{remainingTasks}} remaining {{remainingTasks; 1:task; default:tasks}}; default:No remaining tasks}}",
-	"noListsMessage": "Create your first list to get started!",
-	"notificationMessage": "{{itemType; List:List; default:Task}} <strong>{{itemTitle}}</strong> was removed.",
-	"undoRemoval": "Undo",
-	"closeNotification": "Close notification",
-	"footer": "Made with {{image}} by Rodrigo D’Agostino"
+	"noListsMessage": "Create your first list to get started!"
 }

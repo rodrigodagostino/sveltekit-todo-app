@@ -17,15 +17,35 @@ const config: Config<Params> = {
 	loaders: [
 		{
 			locale: 'en',
+			key: 'layout',
+			loader: async () => (await import('./en/layout.json')).default,
+		},
+		{
+			locale: 'en',
 			key: 'home',
 			routes: ['/'],
 			loader: async () => (await import('./en/home.json')).default,
+		},
+		{
+			locale: 'en',
+			key: 'list',
+			loader: async () => (await import('./en/list.json')).default,
+		},
+		{
+			locale: 'es',
+			key: 'layout',
+			loader: async () => (await import('./es/layout.json')).default,
 		},
 		{
 			locale: 'es',
 			key: 'home',
 			routes: ['/'],
 			loader: async () => (await import('./es/home.json')).default,
+		},
+		{
+			locale: 'es',
+			key: 'list',
+			loader: async () => (await import('./es/list.json')).default,
 		},
 	],
 };
