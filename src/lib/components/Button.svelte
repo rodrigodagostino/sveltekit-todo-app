@@ -7,6 +7,7 @@
 	export let href: string | undefined = undefined;
 	export let target: '_self' | '_blank' | undefined = href ? '_self' : undefined;
 	export let type: 'button' | 'submit' | undefined = !href ? 'button' : undefined;
+	export let formaction: string | undefined = undefined;
 	export let icon:
 		| 'check'
 		| 'grip-dots-vertical'
@@ -25,6 +26,7 @@
 	{href}
 	{target}
 	{type}
+	{formaction}
 	role={!href ? 'button' : undefined}
 	on:click
 >
@@ -46,6 +48,7 @@
 <style lang="scss">
 	.button {
 		display: flex;
+		flex-shrink: 0;
 		gap: 0.5rem;
 		justify-content: center;
 		align-items: center;
