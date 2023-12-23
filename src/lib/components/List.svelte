@@ -19,61 +19,59 @@
 	import { t } from '$lib/translations';
 
 	import Button from './Button.svelte';
+	import { tick } from 'svelte';
 
 	export let id: IList['id'];
 	export let position: IList['position'];
 	export let title: IList['title'];
 	export let tasks: IList['tasks'];
 
-	let titleRef: HTMLHeadingElement;
+	let titleRef: HTMLTextAreaElement;
 
-	let isListBeingEdited = false;
+	let prevTitle: string = title;
+	let newTaskTitle: string = '';
+	let isEditing = false;
 	let remainingTasks: number | null = null;
 	$: {
 		remainingTasks = tasks.length
 			? tasks.reduce((total, currentValue) => (!currentValue.isDone ? total + 1 : total), 0)
 			: 0;
 	}
-	let taskNewTitle: string = '';
-	let titlePrevContent: string;
 
-	const handleTitleChanges = (action: 'confirm' | 'cancel') => {
-		isListBeingEdited = false;
-		action === 'confirm'
-			? editListTitle(id, titleRef.textContent || '')
-			: (titleRef.textContent = titlePrevContent);
-		titleRef.removeAttribute('contenteditable');
+	const handleEditList = async () => {
+		isEditing = true;
+		await tick();
+		prevTitle = title || '';
+		titleRef.focus();
 	};
 
-	const handleOnKeydownTitleChanges = (event: KeyboardEvent) => {
+	const handleListChanges = (action: 'confirm' | 'cancel') => {
+		isEditing = false;
+		action === 'confirm' ? editListTitle(id, title || '') : (title = prevTitle);
+	};
+
+	const handleOnKeydownListChanges = (event: KeyboardEvent) => {
 		switch (event.key) {
 			case 'Enter':
-				handleTitleChanges('confirm');
+				handleListChanges('confirm');
 				break;
 			case 'Escape':
-				handleTitleChanges('cancel');
+				handleListChanges('cancel');
 				break;
 		}
 	};
 
-	const triggerTitleEdit = () => {
-		titlePrevContent = titleRef.textContent || '';
-		isListBeingEdited = true;
-		titleRef.setAttribute('contenteditable', 'true');
-		titleRef.focus();
-	};
-
 	const handleAddTask = () => {
-		if (!(taskNewTitle.trim() !== '')) return;
+		if (!(newTaskTitle.trim() !== '')) return;
 
 		addTask(id, {
 			listId: id,
 			id: new Date().getTime(),
 			position: +tasks.length + 1 || 1,
-			title: taskNewTitle,
+			title: newTaskTitle,
 			isDone: false,
 		});
-		taskNewTitle = '';
+		newTaskTitle = '';
 	};
 
 	const sortableOptions: SortableOptions = {
@@ -114,35 +112,54 @@
 	};
 </script>
 
-<section class="list" in:fly={{ y: 32, duration: 320, delay: 320 }} out:fade={{ duration: 320 }}>
+<section
+	class="list"
+	class:is-editing={isEditing}
+	in:fly={{ y: 32, duration: 320, delay: 320 }}
+	out:fade={{ duration: 320 }}
+>
 	<header class="list__header">
 		<div class="list__header-top">
-			<h2
+			<h2 class="list__title-placeholder">{title}</h2>
+			<textarea
 				bind:this={titleRef}
+				name="list-title"
+				id="list-title-{id}"
 				class="list__title"
-				on:keydown={(event) => handleOnKeydownTitleChanges(event)}
-			>
-				{title}
-			</h2>
-			{#if isListBeingEdited}
-				<div class="list__actions">
-					<Button variant="ghost" icon="check" on:click={() => handleTitleChanges('confirm')}>
-						<svelte:fragment slot="sr-only">{$t('list.confirmChanges')}</svelte:fragment>
-					</Button>
-					<Button variant="ghost" icon="times" on:click={() => handleTitleChanges('cancel')}>
-						<svelte:fragment slot="sr-only">{$t('list.cancelChanges')}</svelte:fragment>
-					</Button>
-				</div>
-			{:else}
-				<div class="list__actions">
-					<Button variant="ghost" icon="pen" on:click={triggerTitleEdit}>
-						<svelte:fragment slot="sr-only">{$t('list.editList')}</svelte:fragment>
-					</Button>
-					<Button variant="ghost" icon="trash-can" on:click={() => removeList(id)}>
-						<svelte:fragment slot="sr-only">{$t('list.removeList')}</svelte:fragment>
-					</Button>
-				</div>
-			{/if}
+				bind:value={title}
+				rows="1"
+				on:keydown={(event) => handleOnKeydownListChanges(event)}
+				required
+			/>
+			<div class="list__actions">
+				<Button
+					variant="ghost"
+					icon="check"
+					class="list__button-confirm"
+					on:click={() => handleListChanges('confirm')}
+				>
+					<svelte:fragment slot="sr-only">{$t('list.confirmChanges')}</svelte:fragment>
+				</Button>
+				<Button
+					variant="ghost"
+					icon="times"
+					class="list__button-cancel"
+					on:click={() => handleListChanges('cancel')}
+				>
+					<svelte:fragment slot="sr-only">{$t('list.cancelChanges')}</svelte:fragment>
+				</Button>
+				<Button variant="ghost" icon="pen" class="list__button-edit" on:click={handleEditList}>
+					<svelte:fragment slot="sr-only">{$t('list.editList')}</svelte:fragment>
+				</Button>
+				<Button
+					variant="ghost"
+					icon="trash-can"
+					class="list__button-remove"
+					on:click={() => removeList(id)}
+				>
+					<svelte:fragment slot="sr-only">{$t('list.removeList')}</svelte:fragment>
+				</Button>
+			</div>
 		</div>
 		{#if tasks.length}
 			<div class="list__header-bottom" transition:fadeScale={{ duration: 320 }}>
@@ -175,7 +192,7 @@
 				type="text"
 				name="task-title"
 				class="list__form-input"
-				bind:value={taskNewTitle}
+				bind:value={newTaskTitle}
 				required
 			/>
 			<Button type="submit" variant="ghost" icon="plus">
@@ -193,25 +210,59 @@
 		max-width: 100%;
 		overflow: hidden;
 
+		&.is-editing {
+			.list__title-placeholder {
+				visibility: hidden;
+			}
+
+			.list__title {
+				visibility: visible;
+			}
+
+			:global(.list__button-confirm),
+			:global(.list__button-cancel) {
+				display: block;
+			}
+
+			:global(.list__button-edit),
+			:global(.list__button-remove) {
+				display: none;
+			}
+		}
+
 		&__header {
-			background-color: var(--gray-100);
 			padding: 1.75rem 1.5rem;
+			background-color: var(--gray-100);
 		}
 
 		&__header-top {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			display: grid;
+			grid-template-columns: 1fr auto;
+		}
+
+		&__title-placeholder,
+		&__title {
+			grid-column: 1/2;
+			grid-row: 1;
+			font-size: 2rem;
+			font-weight: 700;
+			line-height: 1.1;
 		}
 
 		&__title {
-			font-size: 2rem;
-			line-height: 1.1;
+			height: 100%;
+			padding: 0;
+			margin: 0 0.5rem 0 0;
+			background-color: transparent;
+			border: none;
+			outline: none;
+			box-shadow: 0 0.125rem 0 var(--gray-400);
+			resize: none;
+			overflow: hidden;
+			visibility: hidden;
 
-			&:is([contenteditable='true']) {
-				outline: none;
-				box-shadow: 0 2px 0 var(--indigo-500);
-				cursor: text;
+			&:focus {
+				box-shadow: 0 0.125rem 0 var(--indigo-500);
 			}
 		}
 
@@ -227,6 +278,25 @@
 		&__actions {
 			display: flex;
 			gap: 0.25rem;
+		}
+
+		:global(.list__button-confirm),
+		:global(.list__button-cancel) {
+			display: none;
+		}
+
+		:global(.list__button-confirm) {
+			&:focus,
+			&:hover {
+				color: var(--green-500);
+			}
+		}
+
+		:global(.list__button-cancel) {
+			&:focus,
+			&:hover {
+				color: var(--red-500);
+			}
 		}
 
 		&__content {
