@@ -53,6 +53,7 @@
 	const handleOnKeydownListChanges = (event: KeyboardEvent) => {
 		switch (event.key) {
 			case 'Enter':
+				event.preventDefault();
 				handleListChanges('confirm');
 				break;
 			case 'Escape':

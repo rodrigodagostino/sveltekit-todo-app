@@ -45,6 +45,7 @@
 	const handleOnKeydownTaskChanges = (event: KeyboardEvent) => {
 		switch (event.key) {
 			case 'Enter':
+				event.preventDefault();
 				handleTaskChanges('confirm');
 				break;
 			case 'Escape':
