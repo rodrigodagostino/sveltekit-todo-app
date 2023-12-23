@@ -47,7 +47,11 @@
 
 	const handleListChanges = (action: 'confirm' | 'cancel') => {
 		isEditing = false;
-		action === 'confirm' ? editListTitle(id, title || '') : (title = prevTitle);
+		if (action === 'confirm') {
+			prevTitle !== title && editListTitle(id, title || '');
+		} else if (action === 'cancel') {
+			title = prevTitle;
+		}
 	};
 
 	const handleOnKeydownListChanges = (event: KeyboardEvent) => {

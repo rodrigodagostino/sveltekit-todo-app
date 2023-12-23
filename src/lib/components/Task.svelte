@@ -38,7 +38,11 @@
 
 	const handleTaskChanges = async (action: 'confirm' | 'cancel') => {
 		isEditing = false;
-		action === 'confirm' ? editTask(listId, id, title || '') : (title = prevTitle);
+		if (action === 'confirm') {
+			prevTitle !== title && editTask(listId, id, title || '');
+		} else if (action === 'cancel') {
+			title = prevTitle;
+		}
 		statusRef.removeAttribute('disabled');
 	};
 
