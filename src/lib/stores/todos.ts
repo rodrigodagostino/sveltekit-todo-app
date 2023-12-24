@@ -1,30 +1,17 @@
 import { writable, get } from 'svelte/store';
-import { browser } from '$app/environment';
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
-import { addNotification } from './notifications';
+import { addNotification } from '$lib/stores/notifications';
+import { setCookie } from '$lib/utils';
 
 const defaultTodos: IList[] = [];
 
-export const todos = writable<IList[]>(defaultTodos, (set) => {
-	if (!browser) return;
-	const hasLists =
-		localStorage.getItem('todos')?.charAt(0) === '[' &&
-		!(localStorage.getItem('todos')?.charAt(1) === ']');
-	set(hasLists ? JSON.parse(localStorage.getItem('todos') || '[]') : []);
-});
-
-export const selectedListId = writable<number | null>(null, (set) => {
-	if (!browser) return;
-	const hasLists =
-		localStorage.getItem('todos')?.charAt(0) === '[' &&
-		!(localStorage.getItem('todos')?.charAt(1) === ']');
-	set(hasLists ? JSON.parse(localStorage.getItem('todos') || '[]')[0].id : null);
-});
+export const todos = writable<IList[]>(defaultTodos);
+export const selectedListId = writable<number | null>(null);
 
 export const setLists = (value: IList[]) => {
 	todos.set(value);
-	localStorage.setItem('todos', JSON.stringify(value));
+	setCookie('todos', JSON.stringify(value), 365);
 };
 
 export const addList = (newList: IList) => {

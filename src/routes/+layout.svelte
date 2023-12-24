@@ -5,7 +5,6 @@
 
 	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
 	import Button from '$lib/components/Button.svelte';
-	import Navigation from '$lib/components/Navigation.svelte';
 	import Notifications from '$lib/components/Notifications.svelte';
 </script>
 
@@ -35,7 +34,6 @@
 <main class="app-main">
 	<div class="container">
 		<h1 class="app-title">{$t('layout.title')}</h1>
-		<Navigation />
 		<slot />
 	</div>
 </main>
