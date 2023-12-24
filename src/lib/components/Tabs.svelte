@@ -3,12 +3,11 @@
 	import cloneDeep from 'lodash.clonedeep';
 
 	import { fly } from 'svelte/transition';
+	import Button from '$lib/components/Button.svelte';
+	import Icon from '$lib/components/Icon.svelte';
 	import { addList, selectedListId, setLists, todos } from '$lib/stores/todos';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
-
-	import Button from './Button.svelte';
-	import Icon from './Icon.svelte';
 
 	let listNewTitle: string = '';
 
@@ -25,10 +24,10 @@
 	};
 
 	const sortableOptions: SortableOptions = {
-		handle: '.navigation__item-handle',
-		ghostClass: 'navigation__item--ghost',
-		chosenClass: 'navigation__item--chosen',
-		dragClass: 'navigation__item--drag',
+		handle: '.tabs__item-handle',
+		ghostClass: 'tabs__item--ghost',
+		chosenClass: 'tabs__item--chosen',
+		dragClass: 'tabs__item--drag',
 		animation: 200,
 		store: {
 			get: () => {
@@ -61,29 +60,29 @@
 	};
 </script>
 
-<nav class="navigation" in:fly={{ y: 32, duration: 320, delay: 320 }}>
-	<ul class="navigation__items" use:sortable={sortableOptions}>
+<nav class="tabs" in:fly={{ y: 32, duration: 320, delay: 320 }}>
+	<ul class="tabs__items" use:sortable={sortableOptions}>
 		{#each $todos as list (list.id)}
 			<li
-				class="navigation__item"
+				class="tabs__item"
 				class:is-active={list.id === $selectedListId}
 				data-id={list.id}
 				in:flyScale={{ y: 64, duration: 320 }}
 				out:fadeScale={{ duration: 320 }}
 			>
-				<button class="navigation__item-button" on:click={() => ($selectedListId = list.id)}>
-					<span class="navigation__item-handle">
+				<button class="tabs__item-button" on:click={() => ($selectedListId = list.id)}>
+					<span class="tabs__item-handle">
 						<Icon icon="grip-dots-vertical" />
 					</span>
-					<span class="navigation__item-label">{list.title}</span>
+					<span class="tabs__item-label">{list.title}</span>
 				</button>
 			</li>
 		{/each}
 	</ul>
-	<form class="navigation__form" on:submit|preventDefault={handleAddList}>
+	<form class="tabs__form" on:submit|preventDefault={handleAddList}>
 		<input
 			type="text"
-			class="navigation__form-input"
+			class="tabs__form-input"
 			name="list-title"
 			bind:value={listNewTitle}
 			required
@@ -95,7 +94,7 @@
 </nav>
 
 <style lang="scss">
-	.navigation {
+	.tabs {
 		color: var(--white);
 
 		&__item {
@@ -106,7 +105,7 @@
 			&.is-active {
 				background-color: var(--indigo-800);
 
-				.navigation__item-button {
+				.tabs__item-button {
 					padding: 1rem 1rem 1rem 0.75rem;
 					font-weight: 600;
 					color: var(--white-rich);

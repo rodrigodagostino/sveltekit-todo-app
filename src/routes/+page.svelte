@@ -2,8 +2,8 @@
 	import { selectedListId, todos } from '$lib/stores/todos';
 
 	import List from '$lib/components/List.svelte';
-	import Navigation from '$lib/components/Navigation.svelte';
 	import NoListsMessage from '$lib/components/NoListsMessage.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
 
 	export let data;
 
@@ -11,7 +11,7 @@
 	$: selectedListId.set(data.selectedListId);
 </script>
 
-<Navigation />
+<Tabs />
 {#if $todos.length}
 	{#each $todos as list (list.id)}
 		{#if $selectedListId === list.id}
