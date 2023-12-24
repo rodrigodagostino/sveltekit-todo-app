@@ -42,10 +42,13 @@
 >
 	<div class="notification__inner">
 		<p class="notification__text" role="status">{@html text}</p>
-		<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('layout.undoRemoval')}</Button>
-		<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)}>
-			<svelte:fragment slot="sr-only">{$t('layout.closeNotification')}</svelte:fragment>
-		</Button>
+		<div class="notification__actions">
+			<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('layout.undoRemoval')}</Button>
+			<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)}>
+				<svelte:fragment slot="sr-only">{$t('layout.closeNotification')}</svelte:fragment>
+			</Button>
+		</div>
+		<div class="notification__progress" />
 	</div>
 </div>
 
@@ -55,21 +58,11 @@
 			display: flex;
 			gap: 1rem;
 			align-items: center;
-			padding: 0.75rem 1rem 0.75rem 1.5rem;
+			padding-block: 0.75rem;
+			padding-inline: 1.25rem 0.75rem;
 			background-color: var(--gray-900);
 			color: var(--gray-050);
 			position: relative;
-
-			&::after {
-				content: '';
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				height: 0.25rem;
-				background-color: var(--indigo-600);
-				animation: progress 8s linear forwards;
-			}
 		}
 
 		&__text {
@@ -79,8 +72,19 @@
 			}
 		}
 
-		:global(.button) {
-			flex: 0 0 auto;
+		&__actions {
+			display: flex;
+			gap: 0.5rem;
+		}
+
+		&__progress {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 0.25rem;
+			background-color: var(--indigo-600);
+			animation: progress 8s linear forwards;
 		}
 	}
 
