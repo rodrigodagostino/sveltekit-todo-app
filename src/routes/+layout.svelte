@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { t, locale, locales } from '$lib/translations';
-	import './styles.css';
-
 	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
 	import Button from '$lib/components/Button.svelte';
 	import Notifications from '$lib/components/Notifications.svelte';
+	import { t, locale, locales } from '$lib/translations';
+	import './styles.css';
 </script>
 
 <svelte:head>
@@ -99,22 +98,14 @@
 		}
 
 		a {
-			color: var(--gray-150);
-			text-decoration: none;
-			transition: color 0.24s;
-
-			&:focus,
-			&:hover {
-				color: var(--white-rich);
-			}
+			color: var(--gray-900);
 		}
 
 		:global(img) {
-			height: 1.25rem;
-			width: auto;
-			vertical-align: middle;
-			margin: 0 0.25rem;
 			display: inline-block;
+			width: auto;
+			height: 1.25rem;
+			vertical-align: middle;
 		}
 	}
 
