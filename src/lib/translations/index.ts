@@ -32,6 +32,11 @@ const config: Config<Params> = {
 			loader: async () => (await import('./en/list.json')).default,
 		},
 		{
+			locale: 'en',
+			key: 'error',
+			loader: async () => (await import('./en/error.json')).default,
+		},
+		{
 			locale: 'es',
 			key: 'layout',
 			loader: async () => (await import('./es/layout.json')).default,
@@ -46,6 +51,11 @@ const config: Config<Params> = {
 			locale: 'es',
 			key: 'list',
 			loader: async () => (await import('./es/list.json')).default,
+		},
+		{
+			locale: 'es',
+			key: 'error',
+			loader: async () => (await import('./es/error.json')).default,
 		},
 	],
 };
