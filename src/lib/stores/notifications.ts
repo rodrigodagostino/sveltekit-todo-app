@@ -1,4 +1,5 @@
 import { writable, get } from 'svelte/store';
+
 import type { Notification } from '$lib/components/Notification.svelte';
 import { t, type Params } from '$lib/translations';
 

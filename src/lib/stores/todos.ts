@@ -1,4 +1,5 @@
 import { writable, get } from 'svelte/store';
+
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
 import { addNotification } from '$lib/stores/notifications';

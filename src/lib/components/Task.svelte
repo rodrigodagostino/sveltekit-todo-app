@@ -10,11 +10,10 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
+
+	import { Button, Icon } from '$lib/components';
 	import { editTask, removeTask, toggleTaskStatus } from '$lib/stores/todos';
 	import { t } from '$lib/translations';
-
-	import Button from './Button.svelte';
-	import Icon from './Icon.svelte';
 
 	export let listId: ITask['listId'];
 	export let id: ITask['id'];

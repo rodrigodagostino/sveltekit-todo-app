@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import svelteLogo from '$lib/assets/images/svelte-logo.svg';
-	import Button from '$lib/components/Button.svelte';
-	import Notifications from '$lib/components/Notifications.svelte';
+	import { Button, Notifications } from '$lib/components';
 	import { t, locale, locales } from '$lib/translations';
 	import './styles.css';
 </script>

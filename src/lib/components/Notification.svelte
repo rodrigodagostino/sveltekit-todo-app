@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
-	import type { IList } from './List.svelte';
-	import type { ITask } from './Task.svelte';
+	import type { IList } from '$lib/components/List.svelte';
+	import type { ITask } from '$lib/components/Task.svelte';
 
 	export interface Notification {
 		id: number;
@@ -11,12 +11,11 @@
 </script>
 
 <script lang="ts">
+	import { Button } from '$lib/components';
 	import { addList, addTask, todos } from '$lib/stores/todos';
 	import { removeNotification } from '$lib/stores/notifications';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
-
-	import Button from './Button.svelte';
 
 	export let id: Notification['id'];
 	export let type: Notification['type'];

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
+
 	import { t } from '$lib/translations';
 </script>
 

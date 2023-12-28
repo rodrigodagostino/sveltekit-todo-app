@@ -10,16 +10,15 @@
 </script>
 
 <script lang="ts">
+	import { tick } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 	import Sortable, { type SortableOptions } from 'sortablejs';
 	import cloneDeep from 'lodash.clonedeep';
 
-	import { fade, fly } from 'svelte/transition';
+	import { Button } from '$lib/components';
 	import { addTask, editList, editListTitle, removeList } from '$lib/stores/todos';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
-
-	import Button from './Button.svelte';
-	import { tick } from 'svelte';
 
 	export let id: IList['id'];
 	export let position: IList['position'];

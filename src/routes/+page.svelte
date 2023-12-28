@@ -1,9 +1,6 @@
 <script lang="ts">
+	import { List, NoListsMessage, Tabs } from '$lib/components';
 	import { selectedListId, todos } from '$lib/stores/todos';
-
-	import List from '$lib/components/List.svelte';
-	import NoListsMessage from '$lib/components/NoListsMessage.svelte';
-	import Tabs from '$lib/components/Tabs.svelte';
 
 	export let data;
 

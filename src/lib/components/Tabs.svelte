@@ -1,10 +1,9 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
 	import Sortable, { type SortableOptions } from 'sortablejs';
 	import cloneDeep from 'lodash.clonedeep';
 
-	import { fly } from 'svelte/transition';
-	import Button from '$lib/components/Button.svelte';
-	import Icon from '$lib/components/Icon.svelte';
+	import { Button, Icon } from '$lib/components';
 	import { addList, selectedListId, setLists, todos } from '$lib/stores/todos';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
