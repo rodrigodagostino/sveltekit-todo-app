@@ -13,7 +13,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components';
 	import { addList, addTask, todos } from '$lib/stores/todos';
-	import { removeNotification } from '$lib/stores/notifications';
+	import { notifications } from '$lib/stores';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -29,7 +29,7 @@
 					...backup,
 					position: $todos.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
 				} as ITask);
-		removeNotification(id);
+		notifications.dismiss(id);
 	};
 </script>
 
@@ -43,7 +43,7 @@
 		<p class="notification__text" role="status">{@html text}</p>
 		<div class="notification__actions">
 			<Button variant="neutral-dark" on:click|once={undoRemoval}>{$t('layout.undoRemoval')}</Button>
-			<Button variant="ghost-dark" icon="times" on:click|once={() => removeNotification(id)}>
+			<Button variant="ghost-dark" icon="times" on:click|once={() => notifications.dismiss(id)}>
 				<svelte:fragment slot="sr-only">{$t('layout.closeNotification')}</svelte:fragment>
 			</Button>
 		</div>

@@ -1,35 +1,39 @@
-import { writable, get } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 import type { Notification } from '$lib/components/Notification.svelte';
 import { t, type Params } from '$lib/translations';
 
-export const notifications = writable<Notification[]>([]);
+function createNotificationsStore() {
+	const { subscribe, update } = writable<Notification[]>([]);
 
-export const addNotification = (
-	type: Notification['type'],
-	currentItem: Notification['backup']
-) => {
-	const notificationId = new Date().getTime();
-	const titleCasedType = type.charAt(0).toUpperCase() + type.slice(1);
+	function add(type: Notification['type'], currentItem: Notification['backup']) {
+		const notificationId = new Date().getTime();
+		const titleCasedType = type.charAt(0).toUpperCase() + type.slice(1);
 
-	notifications.update((currData) => [
-		...currData,
-		{
-			id: notificationId,
-			type,
-			text: t.get('layout.notificationMessage', {
-				itemType: titleCasedType as Params['itemType'],
-				itemTitle: currentItem.title,
-			}),
-			backup: currentItem,
-		},
-	]);
-	setTimeout(() => removeNotification(notificationId), 8000);
-};
-
-export const removeNotification = (notificationId: Notification['id']) => {
-	const $notifications = get(notifications);
-	if ($notifications.some((notification) => notification.id === notificationId)) {
-		notifications.update((currData) => currData.filter((item) => item.id !== notificationId));
+		update((currValue) => [
+			...currValue,
+			{
+				id: notificationId,
+				type,
+				text: t.get('layout.notificationMessage', {
+					itemType: titleCasedType as Params['itemType'],
+					itemTitle: currentItem.title,
+				}),
+				backup: currentItem,
+			},
+		]);
+		setTimeout(() => dismiss(notificationId), 8000);
 	}
-};
+
+	function dismiss(notificationId: Notification['id']) {
+		update((currValue) => currValue.filter((item) => item.id !== notificationId));
+	}
+
+	return {
+		subscribe,
+		add,
+		dismiss,
+	};
+}
+
+export default createNotificationsStore();

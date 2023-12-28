@@ -2,7 +2,7 @@ import { writable, get } from 'svelte/store';
 
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
-import { addNotification } from '$lib/stores/notifications';
+import { notifications } from '$lib/stores';
 import { setCookie } from '$lib/utils';
 
 const defaultTodos: IList[] = [];
@@ -51,7 +51,7 @@ export const removeList = (listId: IList['id']) => {
 	const $toDos = get(todos);
 
 	const currentList = $toDos.filter((list) => list.id === listId)[0];
-	addNotification('list', currentList);
+	notifications.add('list', currentList);
 
 	const listIndex = $toDos.findIndex((list) => list.id === listId);
 	// Select the previous list (if it exists) before deleting.
@@ -122,7 +122,7 @@ export const removeTask = (listId: IList['id'], taskId: ITask['id']) => {
 	const currentTask = $toDos
 		.filter((list: IList) => list.id === listId)[0]
 		.tasks.filter((task: ITask) => task.id === taskId)[0];
-	addNotification('task', {
+	notifications.add('task', {
 		listId,
 		id: currentTask.id,
 		position: currentTask.position,
