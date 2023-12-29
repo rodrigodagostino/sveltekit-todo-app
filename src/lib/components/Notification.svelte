@@ -12,7 +12,7 @@
 
 <script lang="ts">
 	import { Button } from '$lib/components';
-	import { notifications, todos } from '$lib/stores';
+	import { lists, notifications } from '$lib/stores';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -23,10 +23,10 @@
 
 	const undoRemoval = () => {
 		type === 'list' && !backup.hasOwnProperty('listId')
-			? todos.addList({ ...backup, position: $todos.length + 1 } as IList)
-			: todos.addTask((backup as ITask).listId, {
+			? lists.addList({ ...backup, position: $lists.length + 1 } as IList)
+			: lists.addTask((backup as ITask).listId, {
 					...backup,
-					position: $todos.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
+					position: $lists.find((list) => list.id === (backup as ITask).listId)?.tasks.length! + 1,
 				} as ITask);
 		notifications.dismiss(id);
 	};

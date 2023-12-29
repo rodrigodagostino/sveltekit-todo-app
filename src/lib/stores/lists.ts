@@ -7,7 +7,7 @@ import type { ITask } from '$lib/components/Task.svelte';
 import { notifications, selectedListId } from '$lib/stores';
 import { setCookie } from '$lib/utils';
 
-function createTodosStore() {
+function createListsStore() {
 	const { subscribe, set, update } = writable<IList[]>([]);
 
 	function setLists(value: IList[]) {
@@ -27,7 +27,7 @@ function createTodosStore() {
 	function setStorage(value: IList[]) {
 		if (!browser) return;
 
-		setCookie('todos', JSON.stringify(value), 365);
+		setCookie('lists', JSON.stringify(value), 365);
 	}
 
 	function addList(newList: IList) {
@@ -143,7 +143,7 @@ function createTodosStore() {
 
 	return {
 		subscribe,
-		setLists,
+		set: setLists,
 		addList,
 		editList,
 		removeList,
@@ -154,4 +154,4 @@ function createTodosStore() {
 	};
 }
 
-export default createTodosStore();
+export default createListsStore();

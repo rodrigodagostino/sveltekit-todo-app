@@ -2,11 +2,11 @@ import type { Actions, PageServerLoad } from './$types';
 import type { IList } from '$lib/components/List.svelte';
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	const todos: IList[] = JSON.parse(cookies.get('todos') || '[]');
+	const lists: IList[] = JSON.parse(cookies.get('lists') || '[]');
 
 	return {
-		todos,
-		selectedListId: todos[0]?.id || null,
+		lists,
+		selectedListId: lists[0]?.id || null,
 	};
 };
 

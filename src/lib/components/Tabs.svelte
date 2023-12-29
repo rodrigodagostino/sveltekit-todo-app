@@ -4,7 +4,7 @@
 	import cloneDeep from 'lodash.clonedeep';
 
 	import { Button, Icon } from '$lib/components';
-	import { selectedListId, todos } from '$lib/stores';
+	import { lists, selectedListId } from '$lib/stores';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -13,9 +13,9 @@
 	const handleAddList = () => {
 		if (!(listNewTitle.trim() !== '')) return;
 
-		todos.addList({
+		lists.addList({
 			id: new Date().getTime(),
-			position: +$todos.length + 1 || 1,
+			position: +$lists.length + 1 || 1,
 			title: listNewTitle,
 			tasks: [],
 		});
@@ -30,12 +30,12 @@
 		animation: 200,
 		store: {
 			get: () => {
-				const order = $todos.map((list) => `${list.id}`);
+				const order = $lists.map((list) => `${list.id}`);
 				return order ? order : [];
 			},
 			set: (sortable) => {
 				const order = sortable.toArray();
-				const reorderedLists = cloneDeep($todos)
+				const reorderedLists = cloneDeep($lists)
 					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
 					.map((list, i) => {
 						return {
@@ -43,7 +43,7 @@
 							position: i + 1,
 						};
 					});
-				todos.setLists(reorderedLists);
+				lists.set(reorderedLists);
 			},
 		},
 	};
@@ -61,7 +61,7 @@
 
 <nav class="tabs" in:fly={{ y: 32, duration: 320, delay: 320 }}>
 	<ul class="tabs__items" use:sortable={sortableOptions}>
-		{#each $todos as list (list.id)}
+		{#each $lists as list (list.id)}
 			<li
 				class="tabs__item"
 				class:is-active={list.id === $selectedListId}
