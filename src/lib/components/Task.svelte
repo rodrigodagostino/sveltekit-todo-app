@@ -12,7 +12,7 @@
 	import { tick } from 'svelte';
 
 	import { Button, Icon } from '$lib/components';
-	import { editTask, removeTask, toggleTaskStatus } from '$lib/stores/todos';
+	import { todos } from '$lib/stores';
 	import { t } from '$lib/translations';
 
 	export let listId: ITask['listId'];
@@ -38,7 +38,7 @@
 	const handleTaskChanges = async (action: 'confirm' | 'cancel') => {
 		isEditing = false;
 		if (action === 'confirm') {
-			prevTitle !== title && editTask(listId, id, title || '');
+			prevTitle !== title && todos.editTask(listId, id, title || '');
 		} else if (action === 'cancel') {
 			title = prevTitle;
 		}
@@ -69,7 +69,7 @@
 		id="task-status-{id}"
 		class="task__status"
 		bind:checked={isDone}
-		on:click={() => toggleTaskStatus(listId, id)}
+		on:click={() => todos.toggleTaskStatus(listId, id)}
 	/>
 	<label for="task-status-{id}" class="task__title-placeholder">{title}</label>
 	<label for="task-title-{id}" class="sr-only">{$t('list.taskTitle')}</label>
@@ -107,7 +107,7 @@
 			variant="ghost"
 			icon="trash-can"
 			class="task__button-remove"
-			on:click={() => removeTask(listId, id)}
+			on:click={() => todos.removeTask(listId, id)}
 		>
 			<svelte:fragment slot="sr-only">{$t('list.removeTask')}</svelte:fragment>
 		</Button>

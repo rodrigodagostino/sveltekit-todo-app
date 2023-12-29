@@ -1,142 +1,157 @@
-import { writable, get } from 'svelte/store';
+import { writable, type Updater } from 'svelte/store';
+import cloneDeep from 'lodash.clonedeep';
 
+import { browser } from '$app/environment';
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
-import { notifications } from '$lib/stores';
+import { notifications, selectedListId } from '$lib/stores';
 import { setCookie } from '$lib/utils';
 
-const defaultTodos: IList[] = [];
+function createTodosStore() {
+	const { subscribe, set, update } = writable<IList[]>([]);
 
-export const todos = writable<IList[]>(defaultTodos);
-export const selectedListId = writable<number | null>(null);
-
-export const setLists = (value: IList[]) => {
-	todos.set(value);
-	setCookie('todos', JSON.stringify(value), 365);
-};
-
-export const addList = (newList: IList) => {
-	let $toDos: IList[] = defaultTodos;
-	const unsubscribe = todos.subscribe((currData) => ($toDos = currData));
-
-	const newLists = [...$toDos, newList];
-	setLists(newLists);
-	// Select the recently created list.
-	selectedListId.set($toDos[$toDos.length - 1].id);
-
-	unsubscribe();
-};
-
-export const editList = (listId: IList['id'], newList: IList) => {
-	const $toDos = get(todos);
-
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	newLists[targetListIndex] = newList;
-
-	setLists(newLists);
-};
-
-export const editListTitle = (listId: IList['id'], newListTitle: IList['title']) => {
-	const $toDos = get(todos);
-
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	newLists[targetListIndex].title = newListTitle;
-
-	setLists(newLists);
-};
-
-export const removeList = (listId: IList['id']) => {
-	const $toDos = get(todos);
-
-	const currentList = $toDos.filter((list) => list.id === listId)[0];
-	notifications.add('list', currentList);
-
-	const listIndex = $toDos.findIndex((list) => list.id === listId);
-	// Select the previous list (if it exists) before deleting.
-	if ($toDos.length > 1 && listIndex !== 0) {
-		selectedListId.set($toDos[listIndex - 1].id);
-		// Select the next list (if it exists) before deleting.
-	} else if ($toDos.length > 1 && listIndex === 0) {
-		selectedListId.set($toDos[listIndex + 1].id);
-		// Deselect the current list before deleting.
-	} else {
-		selectedListId.set(null);
+	function setLists(value: IList[]) {
+		setStorage(value);
+		set(value);
 	}
 
-	const newLists = $toDos
-		.filter((list) => list.id !== listId)
-		.map((list, i) => ({
-			...list,
-			position: i + 1,
-		}));
+	function updateLists(updater: Updater<IList[]>) {
+		update((currValue) => {
+			const newValue = updater(currValue);
+			setStorage(newValue);
 
-	setLists(newLists);
-};
+			return newValue;
+		});
+	}
 
-export const addTask = (listId: IList['id'], newTask: ITask) => {
-	const $toDos = get(todos);
+	function setStorage(value: IList[]) {
+		if (!browser) return;
 
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	newLists[targetListIndex].tasks.push(newTask);
+		setCookie('todos', JSON.stringify(value), 365);
+	}
 
-	setLists(newLists);
-};
+	function addList(newList: IList) {
+		updateLists((value) => {
+			const newLists = [...value, newList];
 
-export const editTask = (
-	listId: IList['id'],
-	taskId: ITask['id'],
-	newTaskTitle: ITask['title']
-) => {
-	const $toDos = get(todos);
+			// Select the recently created list.
+			selectedListId.set(newLists[newLists.length - 1].id);
 
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
-		(task: ITask) => task.id === taskId
-	);
-	newLists[targetListIndex].tasks[targetTaskIndex].title = newTaskTitle;
+			return newLists;
+		});
+	}
 
-	setLists(newLists);
-};
+	function editList(listId: IList['id'], editedList: IList) {
+		updateLists((value) => {
+			const newLists = cloneDeep(value);
+			const targetListIndex = newLists.findIndex((list) => list.id === listId);
+			newLists[targetListIndex] = editedList;
 
-export const toggleTaskStatus = (listId: IList['id'], taskId: ITask['id']) => {
-	const $toDos = get(todos);
+			return newLists;
+		});
+	}
 
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
-		(task: ITask) => task.id === taskId
-	);
-	newLists[targetListIndex].tasks[targetTaskIndex].isDone =
-		!newLists[targetListIndex].tasks[targetTaskIndex].isDone;
+	function removeList(listId: IList['id']) {
+		updateLists((value) => {
+			const currentList = value.filter((list) => list.id === listId)[0];
+			notifications.add('list', currentList);
 
-	setLists(newLists);
-};
+			const listIndex = value.findIndex((list) => list.id === listId);
+			// Select the previous list (if it exists) before deleting.
+			if (value.length > 1 && listIndex !== 0) {
+				selectedListId.set(value[listIndex - 1].id);
+				// Select the next list (if it exists) before deleting.
+			} else if (value.length > 1 && listIndex === 0) {
+				selectedListId.set(value[listIndex + 1].id);
+				// Deselect the current list before deleting.
+			} else {
+				selectedListId.set(null);
+			}
 
-export const removeTask = (listId: IList['id'], taskId: ITask['id']) => {
-	const $toDos = get(todos);
+			const newLists = cloneDeep(value)
+				.filter((list) => list.id !== listId)
+				.map((list, i) => ({
+					...list,
+					position: i + 1,
+				}));
 
-	const currentTask = $toDos
-		.filter((list: IList) => list.id === listId)[0]
-		.tasks.filter((task: ITask) => task.id === taskId)[0];
-	notifications.add('task', {
-		listId,
-		id: currentTask.id,
-		position: currentTask.position,
-		title: currentTask.title,
-		isDone: currentTask.isDone,
-	});
+			return newLists;
+		});
+	}
 
-	const newLists = $toDos;
-	const targetListIndex = newLists.findIndex((list) => list.id === listId);
-	const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
-		(task: ITask) => task.id === taskId
-	);
-	newLists[targetListIndex].tasks.splice(targetTaskIndex, 1);
-	newLists[targetListIndex].tasks.forEach((task, i) => (task.position = i + 1));
+	function addTask(listId: IList['id'], newTask: ITask) {
+		updateLists((value) => {
+			const newLists = cloneDeep(value);
+			const targetListIndex = newLists.findIndex((list) => list.id === listId);
+			newLists[targetListIndex].tasks.push(newTask);
 
-	setLists(newLists);
-};
+			return newLists;
+		});
+	}
+
+	function toggleTaskStatus(listId: IList['id'], taskId: ITask['id']) {
+		updateLists((value) => {
+			const newLists = cloneDeep(value);
+			const targetListIndex = newLists.findIndex((list) => list.id === listId);
+			const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
+				(task: ITask) => task.id === taskId
+			);
+			newLists[targetListIndex].tasks[targetTaskIndex].isDone =
+				!newLists[targetListIndex].tasks[targetTaskIndex].isDone;
+
+			return newLists;
+		});
+	}
+
+	function editTask(listId: IList['id'], taskId: ITask['id'], newTaskTitle: ITask['title']) {
+		updateLists((value) => {
+			const newLists = cloneDeep(value);
+			const targetListIndex = newLists.findIndex((list) => list.id === listId);
+			const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
+				(task: ITask) => task.id === taskId
+			);
+			newLists[targetListIndex].tasks[targetTaskIndex].title = newTaskTitle;
+
+			return newLists;
+		});
+	}
+
+	function removeTask(listId: IList['id'], taskId: ITask['id']) {
+		updateLists((value) => {
+			const currentTask = cloneDeep(value)
+				.filter((list: IList) => list.id === listId)[0]
+				.tasks.filter((task: ITask) => task.id === taskId)[0];
+			notifications.add('task', {
+				listId,
+				id: currentTask.id,
+				position: currentTask.position,
+				title: currentTask.title,
+				isDone: currentTask.isDone,
+			});
+
+			const newLists = cloneDeep(value);
+			const targetListIndex = newLists.findIndex((list) => list.id === listId);
+			const targetTaskIndex = newLists[targetListIndex].tasks.findIndex(
+				(task: ITask) => task.id === taskId
+			);
+			newLists[targetListIndex].tasks.splice(targetTaskIndex, 1);
+			newLists[targetListIndex].tasks.forEach((task, i) => (task.position = i + 1));
+
+			return newLists;
+		});
+	}
+
+	return {
+		subscribe,
+		setLists,
+		addList,
+		editList,
+		removeList,
+		addTask,
+		toggleTaskStatus,
+		editTask,
+		removeTask,
+	};
+}
+
+export default createTodosStore();

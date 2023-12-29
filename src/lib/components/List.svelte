@@ -16,7 +16,7 @@
 	import cloneDeep from 'lodash.clonedeep';
 
 	import { Button } from '$lib/components';
-	import { addTask, editList, editListTitle, removeList } from '$lib/stores/todos';
+	import { todos } from '$lib/stores';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -47,7 +47,7 @@
 	const handleListChanges = (action: 'confirm' | 'cancel') => {
 		isEditing = false;
 		if (action === 'confirm') {
-			prevTitle !== title && editListTitle(id, title || '');
+			prevTitle !== title && todos.editList(id, { id, position, title: title || '', tasks });
 		} else if (action === 'cancel') {
 			title = prevTitle;
 		}
@@ -68,7 +68,7 @@
 	const handleAddTask = () => {
 		if (!(newTaskTitle.trim() !== '')) return;
 
-		addTask(id, {
+		todos.addTask(id, {
 			listId: id,
 			id: new Date().getTime(),
 			position: +tasks.length + 1 || 1,
@@ -100,7 +100,7 @@
 						};
 					});
 				const reorderedList = { id, position, title, tasks: reorderedTasks };
-				editList(id, reorderedList);
+				todos.editList(id, reorderedList);
 			},
 		},
 	};
@@ -159,7 +159,7 @@
 					variant="ghost"
 					icon="trash-can"
 					class="list__button-remove"
-					on:click={() => removeList(id)}
+					on:click={() => todos.removeList(id)}
 				>
 					<svelte:fragment slot="sr-only">{$t('list.removeList')}</svelte:fragment>
 				</Button>

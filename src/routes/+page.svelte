@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { List, NoListsMessage, Tabs } from '$lib/components';
-	import { selectedListId, todos } from '$lib/stores/todos';
+	import { selectedListId, todos } from '$lib/stores';
 
 	export let data;
 
-	$: todos.set(data.todos);
+	$: todos.setLists(data.todos);
 	$: selectedListId.set(data.selectedListId);
 </script>
 

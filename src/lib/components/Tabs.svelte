@@ -4,7 +4,7 @@
 	import cloneDeep from 'lodash.clonedeep';
 
 	import { Button, Icon } from '$lib/components';
-	import { addList, selectedListId, setLists, todos } from '$lib/stores/todos';
+	import { selectedListId, todos } from '$lib/stores';
 	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
@@ -13,7 +13,7 @@
 	const handleAddList = () => {
 		if (!(listNewTitle.trim() !== '')) return;
 
-		addList({
+		todos.addList({
 			id: new Date().getTime(),
 			position: +$todos.length + 1 || 1,
 			title: listNewTitle,
@@ -43,7 +43,7 @@
 							position: i + 1,
 						};
 					});
-				setLists(reorderedLists);
+				todos.setLists(reorderedLists);
 			},
 		},
 	};
