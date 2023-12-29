@@ -5,13 +5,16 @@
 </script>
 
 <section class="error">
-	<h2 class="error__status">
-		<em>{$page.status}</em><br /><span>{$t('error.notFoundStatus')}</span>
-	</h2>
 	{#if $page.status === 404}
+		<h2 class="error__status">
+			<em>{$page.status}</em><br /><span>{$t('error.notFoundStatus')}</span>
+		</h2>
 		<p class="error__message">{$t('error.notFoundMessage')}</p>
 		<Button href="/" variant="ghost-negative">{$t('error.returnHome')}</Button>
 	{:else}
+		<h2 class="error__status">
+			<em>{$page.status}</em>
+		</h2>
 		<p class="error__message">{$page.error?.message}</p>
 	{/if}
 </section>
