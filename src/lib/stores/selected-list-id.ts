@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
 
-const selectedListId = writable<number | null>(null);
+const selectedListId = writable<string | null>(null);
 
 export default selectedListId;

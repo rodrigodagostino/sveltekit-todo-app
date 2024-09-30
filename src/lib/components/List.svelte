@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
 	import Task, { type ITask } from './Task.svelte';
 
-	export interface IList {
-		id: number;
+	export interface IList extends SortableItemData {
+		id: string;
 		position: number;
 		title: string;
 		tasks: ITask[];
@@ -12,13 +12,21 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import Sortable, { type SortableOptions } from 'sortablejs';
-	import cloneDeep from 'lodash.clonedeep';
+	import {
+		SortableList,
+		SortableItem,
+		sortItems,
+		Handle,
+		type SortEventDetail,
+		type RemoveEventDetail,
+		type SortableItemData,
+	} from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components';
 	import { lists } from '$lib/stores';
-	import { fadeScale, flyScale } from '$lib/transitions';
+	import { fadeScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
+	import Icon from './Icon.svelte';
 
 	export let id: IList['id'];
 	export let position: IList['position'];
@@ -70,7 +78,7 @@
 
 		lists.addTask(id, {
 			listId: id,
-			id: new Date().getTime(),
+			id: String(new Date().getTime()),
 			position: +tasks.length + 1 || 1,
 			title: newTaskTitle,
 			isDone: false,
@@ -78,42 +86,17 @@
 		newTaskTitle = '';
 	};
 
-	const sortableOptions: SortableOptions = {
-		handle: '.task__handle',
-		ghostClass: 'list__task--ghost',
-		chosenClass: 'list__task--chosen',
-		dragClass: 'list__task--drag',
-		animation: 200,
-		store: {
-			get: () => {
-				const order = tasks.map((task) => `${task.id}`);
-				return order ? order : [];
-			},
-			set: (sortable) => {
-				const order = sortable.toArray();
-				const reorderedTasks = cloneDeep(tasks)
-					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
-					.map((task, i) => {
-						return {
-							...task,
-							position: i + 1,
-						};
-					});
-				const reorderedList = { id, position, title, tasks: reorderedTasks };
-				lists.editList(id, reorderedList);
-			},
-		},
-	};
+	function handleSortTask(event: CustomEvent<SortEventDetail>) {
+		const { prevItemIndex, nextItemIndex } = event.detail;
+		const reorderedTasks = sortItems(tasks, prevItemIndex, nextItemIndex);
+		const reorderedList = { id, position, title, tasks: reorderedTasks };
+		lists.editList(id, reorderedList);
+	}
 
-	const sortable = (element: HTMLUListElement, options: SortableOptions) => {
-		const instance = Sortable.create(element, options);
-
-		return {
-			destroy() {
-				instance.destroy;
-			},
-		};
-	};
+	function handleRemoveTask(event: CustomEvent<RemoveEventDetail>) {
+		const { itemId } = event.detail;
+		lists.removeTask(id, itemId);
+	}
 </script>
 
 <section
@@ -173,24 +156,30 @@
 	</header>
 
 	<div class="list__content">
-		<ul class="list__tasks" use:sortable={sortableOptions}>
-			{#each tasks as task (task.id)}
-				<li
-					class="list__task"
-					data-id={task.id}
-					in:flyScale={{ y: 64, duration: 320 }}
-					out:fadeScale={{ duration: 320 }}
-				>
-					<Task
-						listId={id}
-						id={task.id}
-						position={task.position}
-						title={task.title}
-						isDone={task.isDone}
-					/>
-				</li>
+		<SortableList
+			gap={0}
+			hasLockedAxis={true}
+			hasBoundaries={true}
+			on:sort={handleSortTask}
+			on:remove={handleRemoveTask}
+		>
+			{#each tasks as task, index (task.id)}
+				<SortableItem id={task.id} {index}>
+					<div class="list__task">
+						<Handle>
+							<Icon icon="grip-dots-vertical" />
+						</Handle>
+						<Task
+							listId={id}
+							id={task.id}
+							position={task.position}
+							title={task.title}
+							isDone={task.isDone}
+						/>
+					</div>
+				</SortableItem>
 			{/each}
-		</ul>
+		</SortableList>
 		<form class="list__form" on:submit|preventDefault={handleAddTask}>
 			<input
 				type="text"
@@ -228,8 +217,7 @@
 				display: block;
 			}
 
-			:global(.list__button-edit),
-			:global(.list__button-remove) {
+			:global(.list__button-edit) {
 				display: none;
 			}
 		}
@@ -305,23 +293,31 @@
 
 		&__content {
 			padding: 1.5rem 1.5rem 2rem;
+
+			:global(.ssl-handle) {
+				padding: 0.25rem 0.5rem;
+
+				:global(svg circle) {
+					fill: var(--gray-400);
+					transition: fill 0.24s;
+				}
+
+				&:focus,
+				&:hover {
+					:global(svg circle) {
+						fill: var(--indigo-500);
+					}
+				}
+			}
 		}
 
 		&__task {
-			list-style: none;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
 			border-bottom: 1px solid var(--gray-200);
 			background-color: var(--white);
 			transition: background-color 0.24s;
-
-			&:is(&--chosen) {
-				background-color: var(--gray-100);
-				position: relative;
-				z-index: 10;
-			}
-
-			&:is(&--drag) {
-				opacity: 0;
-			}
 		}
 
 		&__form {
@@ -344,6 +340,11 @@
 				border-bottom-color: var(--indigo-500);
 			}
 		}
+	}
+
+	:global(.ssl-ghost.is-dragging) .list__task,
+	:global(.ssl-item.is-keyboard-dragging) .list__task {
+		background-color: var(--gray-100);
 	}
 
 	@media screen and (min-width: 48em) {

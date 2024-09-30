@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import Sortable, { type SortableOptions } from 'sortablejs';
-	import cloneDeep from 'lodash.clonedeep';
+	import {
+		SortableList,
+		SortableItem,
+		Handle,
+		sortItems,
+		type SortEventDetail,
+	} from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button, Icon } from '$lib/components';
 	import { lists, selectedListId } from '$lib/stores';
-	import { fadeScale, flyScale } from '$lib/transitions';
 	import { t } from '$lib/translations';
 
 	let listNewTitle: string = '';
@@ -14,7 +18,7 @@
 		if (!(listNewTitle.trim() !== '')) return;
 
 		lists.addList({
-			id: new Date().getTime(),
+			id: String(new Date().getTime()),
 			position: +$lists.length + 1 || 1,
 			title: listNewTitle,
 			tasks: [],
@@ -22,62 +26,30 @@
 		listNewTitle = '';
 	};
 
-	const sortableOptions: SortableOptions = {
-		handle: '.tabs__item-handle',
-		ghostClass: 'tabs__item--ghost',
-		chosenClass: 'tabs__item--chosen',
-		dragClass: 'tabs__item--drag',
-		animation: 200,
-		store: {
-			get: () => {
-				const order = $lists.map((list) => `${list.id}`);
-				return order ? order : [];
-			},
-			set: (sortable) => {
-				const order = sortable.toArray();
-				const reorderedLists = cloneDeep($lists)
-					.sort((a, b) => order.indexOf(`${a.id}`) - order.indexOf(`${b.id}`))
-					.map((list, i) => {
-						return {
-							...list,
-							position: i + 1,
-						};
-					});
-				lists.set(reorderedLists);
-			},
-		},
-	};
-
-	const sortable = (element: HTMLUListElement, options: SortableOptions) => {
-		const instance = Sortable.create(element, options);
-
-		return {
-			destroy() {
-				instance.destroy;
-			},
-		};
-	};
+	function handleSort(event: CustomEvent<SortEventDetail>) {
+		const { prevItemIndex, nextItemIndex } = event.detail;
+		const reorderedLists = sortItems($lists, prevItemIndex, nextItemIndex);
+		lists.set(reorderedLists);
+	}
 </script>
 
 <nav class="tabs" in:fly={{ y: 32, duration: 320, delay: 320 }}>
-	<ul class="tabs__items" use:sortable={sortableOptions}>
-		{#each $lists as list (list.id)}
-			<li
-				class="tabs__item"
-				class:is-active={list.id === $selectedListId}
-				data-id={list.id}
-				in:flyScale={{ y: 64, duration: 320 }}
-				out:fadeScale={{ duration: 320 }}
-			>
-				<button class="tabs__item-button" on:click={() => ($selectedListId = list.id)}>
-					<span class="tabs__item-handle">
+	<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:sort={handleSort}>
+		{#each $lists as list, index (list.id)}
+			<SortableItem id={list.id} {index}>
+				<button
+					class="tabs__item-button"
+					class:is-active={list.id === $selectedListId}
+					on:click={() => ($selectedListId = list.id)}
+				>
+					<Handle>
 						<Icon icon="grip-dots-vertical" />
-					</span>
+					</Handle>
 					<span class="tabs__item-label">{list.title}</span>
 				</button>
-			</li>
+			</SortableItem>
 		{/each}
-	</ul>
+	</SortableList>
 	<form class="tabs__form" on:submit|preventDefault={handleAddList}>
 		<input
 			type="text"
@@ -96,53 +68,36 @@
 	.tabs {
 		color: var(--white);
 
-		&__item {
-			list-style: none;
-			background-color: var(--indigo-400);
-			transition: background-color 0.24s;
-
-			&.is-active {
-				background-color: var(--indigo-800);
-
-				.tabs__item-button {
-					padding: 1rem 1rem 1rem 0.75rem;
-					font-weight: 600;
-					color: var(--white-rich);
-				}
-			}
-
-			&:is(&--chosen) {
-				background-color: rgba(79, 70, 229, 0.5);
-				position: relative;
-				z-index: 10;
-			}
-
-			&:is(&--drag) {
-				opacity: 0;
-			}
-		}
-
 		&__item-button {
 			display: flex;
 			gap: 0.5rem;
 			align-items: center;
 			width: 100%;
 			padding: 1rem 0;
+			background-color: var(--indigo-400);
 			border: none;
 			outline: 3px solid transparent;
 			font-size: 1.5rem;
 			line-height: 1.2;
 			transition:
 				padding 0.24s,
+				background-color 0.24s,
 				outline 0.24s;
 			cursor: pointer;
 
 			&:focus-visible {
 				outline: 3px solid currentColor;
 			}
+
+			&.is-active {
+				padding: 1rem 1rem 1rem 0.75rem;
+				background-color: var(--indigo-800);
+				font-weight: 600;
+				color: var(--white-rich);
+			}
 		}
 
-		&__item-handle {
+		:global(.ssl-handle) {
 			display: block;
 			flex: 0 0 auto;
 			display: flex;
@@ -183,5 +138,34 @@
 				border-bottom-color: var(--white-rich);
 			}
 		}
+	}
+
+	:global(.ssl-list),
+	:global(.ssl-item__inner) {
+		outline: 3px solid transparent;
+	}
+
+	:global(.ssl-list):focus-visible {
+		outline: 3px solid var(--gray-800);
+		transition: outline 0.24s;
+	}
+
+	:global(.ssl-item__inner) {
+		transition: outline 0.24s;
+	}
+
+	:global(.ssl-item) {
+		outline: none;
+
+		&:focus-within:focus-visible {
+			:global(.ssl-item__inner) {
+				outline: 3px solid var(--gray-800);
+			}
+		}
+	}
+
+	:global(.ssl-ghost.is-dragging) .tabs__item-button,
+	:global(.ssl-item.is-keyboard-dragging) .tabs__item-button {
+		background-color: var(--indigo-500);
 	}
 </style>

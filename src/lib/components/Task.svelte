@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
-	export interface ITask {
-		listId: number;
-		id: number;
+	export interface ITask extends SortableItemData {
+		listId: string;
+		id: string;
 		position: number;
 		title: string;
 		isDone: boolean;
@@ -10,8 +10,9 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { dispatch, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
 
-	import { Button, Icon } from '$lib/components';
+	import { Button } from '$lib/components';
 	import { lists } from '$lib/stores';
 	import { t } from '$lib/translations';
 
@@ -56,12 +57,14 @@
 				break;
 		}
 	};
+
+	const handleRemoveTask = (event: MouseEvent) => {
+		const target = event.target as HTMLElement;
+		if (target) dispatch(target, 'removestart', { item: target.closest('.ssl-item') });
+	};
 </script>
 
 <div class="task" class:task--done={isDone} class:is-editing={isEditing}>
-	<span class="task__handle">
-		<Icon icon="grip-dots-vertical" />
-	</span>
 	<input
 		bind:this={statusRef}
 		type="checkbox"
@@ -107,7 +110,7 @@
 			variant="ghost"
 			icon="trash-can"
 			class="task__button-remove"
-			on:click={() => lists.removeTask(listId, id)}
+			on:click={handleRemoveTask}
 		>
 			<svelte:fragment slot="sr-only">{$t('list.removeTask')}</svelte:fragment>
 		</Button>
@@ -119,6 +122,7 @@
 		display: grid;
 		grid-template-columns: auto auto 1fr auto;
 		align-items: center;
+		width: 100%;
 		padding: 0.5rem 0;
 
 		&--done {
@@ -142,33 +146,14 @@
 				display: block;
 			}
 
-			:global(.task__button-edit),
-			:global(.task__button-remove) {
+			:global(.task__button-edit) {
 				display: none;
-			}
-		}
-
-		&__handle {
-			display: flex;
-			padding: 0.25rem 0.5rem;
-			cursor: grab;
-
-			:global(svg circle) {
-				fill: var(--gray-400);
-				transition: fill 0.24s;
-			}
-
-			&:focus,
-			&:hover {
-				:global(svg circle) {
-					fill: var(--indigo-500);
-				}
 			}
 		}
 
 		&__status {
 			flex-shrink: 0;
-			margin-inline: 0.5rem 0;
+			margin: 0;
 		}
 
 		&__title-placeholder,
