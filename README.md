@@ -2,6 +2,10 @@
 
 This is a simple to-do app built using SvelteKit. It allows users to create multiple lists of pending tasks, which can be reordered, marked as done, renamed and deleted. All the information is stored locally so users can pick up where they left off.
 
+## Live demo:
+
+- [Netlify](https://sk-todo-app.netlify.app)
+
 ## Getting Started
 
 To run this app on your local machine, you will need to have [Node.js](https://nodejs.org/) installed.
