@@ -22,10 +22,10 @@
 		type SortableItemData,
 	} from '@rodrigodagostino/svelte-sortable-list';
 
-	import { Button } from '$lib/components';
-	import { lists } from '$lib/stores';
-	import { fadeScale } from '$lib/transitions';
-	import { t } from '$lib/translations';
+	import { Button } from '$lib/components/index.js';
+	import { lists } from '$lib/stores/index.js';
+	import { fadeScale } from '$lib/transitions/index.js';
+	import { t } from '$lib/translations/index.js';
 	import Icon from './Icon.svelte';
 
 	export let id: IList['id'];

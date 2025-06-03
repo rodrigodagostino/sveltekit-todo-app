@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon } from '$lib/components';
+	import { Icon } from '$lib/components/index.js';
 
 	export let variant: 'neutral' | 'neutral-dark' | 'ghost' | 'ghost-negative' | 'ghost-dark' =
 		'ghost';

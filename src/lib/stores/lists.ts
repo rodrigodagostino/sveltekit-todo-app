@@ -4,8 +4,8 @@ import cloneDeep from 'lodash.clonedeep';
 import { browser } from '$app/environment';
 import type { IList } from '$lib/components/List.svelte';
 import type { ITask } from '$lib/components/Task.svelte';
-import { notifications, selectedListId } from '$lib/stores';
-import { setCookie } from '$lib/utils';
+import { notifications, selectedListId } from '$lib/stores/index.js';
+import { setCookie } from '$lib/utils/index.js';
 
 function createListsStore() {
 	const { subscribe, set, update } = writable<IList[]>([]);

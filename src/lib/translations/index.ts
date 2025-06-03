@@ -1,6 +1,6 @@
 import i18n, { type Config } from 'sveltekit-i18n';
 
-import lang from './lang.json';
+import lang from './lang.json' with { type: 'json' };
 
 export interface Params {
 	lang?: 'en' | 'es';

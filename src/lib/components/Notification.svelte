@@ -11,10 +11,10 @@
 </script>
 
 <script lang="ts">
-	import { Button } from '$lib/components';
-	import { lists, notifications } from '$lib/stores';
-	import { fadeScale, flyScale } from '$lib/transitions';
-	import { t } from '$lib/translations';
+	import { Button } from '$lib/components/index.js';
+	import { lists, notifications } from '$lib/stores/index.js';
+	import { fadeScale, flyScale } from '$lib/transitions/index.js';
+	import { t } from '$lib/translations/index.js';
 
 	export let id: Notification['id'];
 	export let type: Notification['type'];

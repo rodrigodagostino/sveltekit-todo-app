@@ -12,9 +12,10 @@
 	import { tick } from 'svelte';
 	import { dispatch, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
 
-	import { Button } from '$lib/components';
-	import { lists } from '$lib/stores';
-	import { t } from '$lib/translations';
+	import { Button } from '$lib/components/index.js';
+	import { lists } from '$lib/stores/index.js';
+	import { t } from '$lib/translations/index.js';
+	import Icon from './Icon.svelte';
 
 	export let listId: ITask['listId'];
 	export let id: ITask['id'];

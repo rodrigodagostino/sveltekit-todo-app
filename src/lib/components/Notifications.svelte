@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Notification } from '$lib/components';
-	import { notifications } from '$lib/stores';
+	import { Notification } from '$lib/components/index.js';
+	import { notifications } from '$lib/stores/index.js';
 </script>
 
 <div class="notifications">

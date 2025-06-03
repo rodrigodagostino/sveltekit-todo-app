@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 import type { Notification } from '$lib/components/Notification.svelte';
-import { t, type Params } from '$lib/translations';
+import { t, type Params } from '$lib/translations/index.js';
 
 function createNotificationsStore() {
 	const { subscribe, update } = writable<Notification[]>([]);

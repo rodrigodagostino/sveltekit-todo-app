@@ -8,9 +8,9 @@
 		type SortEventDetail,
 	} from '@rodrigodagostino/svelte-sortable-list';
 
-	import { Button, Icon } from '$lib/components';
-	import { lists, selectedListId } from '$lib/stores';
-	import { t } from '$lib/translations';
+	import { Button, Icon } from '$lib/components/index.js';
+	import { lists, selectedListId } from '$lib/stores/index.js';
+	import { t } from '$lib/translations/index.js';
 
 	let listNewTitle: string = '';
 

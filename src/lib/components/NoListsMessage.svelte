@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 
-	import { t } from '$lib/translations';
+	import { t } from '$lib/translations/index.js';
 </script>
 
 <div
