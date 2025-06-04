@@ -46,6 +46,7 @@
 </svelte:element>
 
 <style lang="scss">
+	:global(.button),
 	.button {
 		display: flex;
 		flex-shrink: 0;
@@ -69,69 +70,70 @@
 		&:focus-visible {
 			outline: 3px solid currentColor;
 		}
+	}
 
-		&--neutral {
-			color: var(--gray-050);
-			background-color: var(--gray-600);
+	.button--neutral {
+		color: var(--gray-050);
+		background-color: var(--gray-600);
 
-			&:focus,
-			&:hover {
-				color: var(--white-rich);
-				background-color: var(--gray-400);
-			}
+		&:focus,
+		&:hover {
+			color: var(--white-rich);
+			background-color: var(--gray-400);
 		}
+	}
 
-		&--neutral-dark {
-			color: var(--gray-100);
-			background-color: var(--gray-700);
+	.button--neutral-dark {
+		color: var(--gray-100);
+		background-color: var(--gray-700);
 
-			&:focus,
-			&:hover {
-				color: var(--white-rich);
-				background-color: var(--gray-500);
-			}
+		&:focus,
+		&:hover {
+			color: var(--white-rich);
+			background-color: var(--gray-500);
 		}
+	}
 
-		&--ghost {
-			color: var(--gray-400);
-			background-color: transparent;
+	:global(.button--ghost),
+	.button--ghost {
+		color: var(--gray-400);
+		background-color: transparent;
 
-			&:focus,
-			&:hover {
-				color: var(--indigo-500);
-			}
+		&:focus,
+		&:hover {
+			color: var(--indigo-500);
 		}
+	}
 
-		&--ghost-negative {
-			color: var(--gray-100);
-			background-color: transparent;
+	.button--ghost-negative {
+		color: var(--gray-100);
+		background-color: transparent;
 
-			&:focus,
-			&:hover {
-				color: var(--white-rich);
-			}
+		&:focus,
+		&:hover {
+			color: var(--white-rich);
 		}
+	}
 
-		&--ghost-dark {
-			color: var(--gray-400);
-			background-color: transparent;
+	.button--ghost-dark {
+		color: var(--gray-400);
+		background-color: transparent;
 
-			&:focus,
-			&:hover {
-				color: var(--indigo-400);
-			}
+		&:focus,
+		&:hover {
+			color: var(--indigo-400);
 		}
+	}
 
-		&--small {
-			font-size: 1rem;
-		}
+	.button--small {
+		font-size: 1rem;
+	}
 
-		&--medium {
-			font-size: 1.5rem;
-		}
+	.button--medium {
+		font-size: 1.5rem;
+	}
 
-		&--large {
-			font-size: 2.5rem;
-		}
+	.button--large {
+		font-size: 2.5rem;
 	}
 </style>

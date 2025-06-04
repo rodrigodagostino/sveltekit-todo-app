@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { Remove, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
+	import { Handle, Remove, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components/index.js';
 	import { lists } from '$lib/stores/index.js';
@@ -68,6 +68,9 @@
 </script>
 
 <div class="task" class:task--done={isDone} class:is-editing={isEditing}>
+	<Handle>
+		<Icon icon="grip-dots-vertical" />
+	</Handle>
 	<input
 		bind:this={statusRef}
 		type="checkbox"
@@ -93,7 +96,7 @@
 		<Button
 			variant="ghost"
 			icon="check"
-			class="task__button-confirm"
+			class="button--confirm"
 			on:click={() => handleTaskChanges('confirm')}
 		>
 			<svelte:fragment slot="sr-only">{$t('list.confirmChanges')}</svelte:fragment>
@@ -101,15 +104,15 @@
 		<Button
 			variant="ghost"
 			icon="times"
-			class="task__button-cancel"
+			class="button--cancel"
 			on:click={() => handleTaskChanges('cancel')}
 		>
 			<svelte:fragment slot="sr-only">{$t('list.cancelChanges')}</svelte:fragment>
 		</Button>
-		<Button variant="ghost" icon="pen" class="task__button-edit" on:click={handleEditTask}>
+		<Button variant="ghost" icon="pen" class="button--edit" on:click={handleEditTask}>
 			<svelte:fragment slot="sr-only">{$t('list.editTask')}</svelte:fragment>
 		</Button>
-		<Remove on:click={handleRemoveTask}>
+		<Remove class="button button--ghost" on:click={handleRemoveTask}>
 			<span class="sr-only">{$t('list.removeTask')}</span>
 			<Icon icon="trash-can" />
 		</Remove>
@@ -122,12 +125,44 @@
 		grid-template-columns: auto auto 1fr auto;
 		align-items: center;
 		width: 100%;
-		padding: 0.5rem 0;
+		padding-block: 0.5rem;
+		background-color: var(--white);
+		border-bottom: 1px solid var(--gray-200);
+		transition: background-color 0.24s;
 
-		&--done {
-			.task__title-placeholder {
-				text-decoration: line-through;
-				opacity: 0.5;
+		:global(.ssl-handle) {
+			padding: 0.5rem;
+			margin-inline-end: 0.5rem;
+
+			:global(svg circle) {
+				fill: var(--gray-400);
+				transition: fill 0.24s;
+			}
+
+			&:focus,
+			&:hover {
+				:global(svg circle) {
+					fill: var(--indigo-500);
+				}
+			}
+		}
+
+		:global(.button--confirm),
+		:global(.button--cancel) {
+			display: none;
+		}
+
+		:global(.button--confirm) {
+			&:focus,
+			&:hover {
+				color: var(--green-500);
+			}
+		}
+
+		:global(.button--cancel) {
+			&:focus,
+			&:hover {
+				color: var(--red-500);
 			}
 		}
 
@@ -140,76 +175,73 @@
 				visibility: visible;
 			}
 
-			:global(.task__button-confirm),
-			:global(.task__button-cancel) {
+			:global(.button--confirm),
+			:global(.button--cancel) {
 				display: block;
 			}
 
-			:global(.task__button-edit) {
+			:global(.button--edit) {
 				display: none;
 			}
 		}
+	}
 
-		&__status {
-			flex-shrink: 0;
-			margin: 0;
+	.task__status {
+		flex-shrink: 0;
+		margin: 0;
+	}
+
+	.task__title-placeholder,
+	.task__title {
+		grid-column: 3/4;
+		grid-row: 1;
+		padding: 0.25rem 0;
+		font-size: 1.25rem;
+		line-height: 1.2;
+		transition: opacity 0.24s;
+	}
+
+	.task__title-placeholder {
+		padding-inline: 0.75rem;
+		justify-self: start;
+	}
+
+	.task__title {
+		height: 100%;
+		margin: 0 0.75rem;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		box-shadow: 0 0.125rem 0 var(--gray-400);
+		resize: none;
+		overflow: hidden;
+		visibility: hidden;
+
+		&:focus {
+			box-shadow: 0 0.125rem 0 var(--indigo-500);
 		}
+	}
 
-		&__title-placeholder,
-		&__title {
-			grid-column: 3/4;
-			grid-row: 1;
-			padding: 0.25rem 0;
-			font-size: 1.25rem;
-			line-height: 1.2;
-			transition: opacity 0.24s;
+	.task__actions {
+		grid-column: 4/-1;
+		margin-left: auto;
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.task--done {
+		.task__title-placeholder {
+			text-decoration: line-through;
+			opacity: 0.5;
 		}
+	}
 
-		&__title-placeholder {
-			padding-inline: 0.75rem;
-			justify-self: start;
-		}
+	:global(.ssl-ghost[data-is-pointer-dragging='true']) .task,
+	:global(.ssl-item[data-is-keyboard-dragging='true']) .task {
+		background-color: var(--gray-100);
+	}
 
-		&__title {
-			height: 100%;
-			margin: 0 0.75rem;
-			background-color: transparent;
-			border: none;
-			outline: none;
-			box-shadow: 0 0.125rem 0 var(--gray-400);
-			resize: none;
-			overflow: hidden;
-			visibility: hidden;
-
-			&:focus {
-				box-shadow: 0 0.125rem 0 var(--indigo-500);
-			}
-		}
-
-		&__actions {
-			grid-column: 4/-1;
-			margin-left: auto;
-			display: flex;
-			gap: 0.25rem;
-		}
-
-		:global(.task__button-confirm),
-		:global(.task__button-cancel) {
-			display: none;
-		}
-
-		:global(.task__button-confirm) {
-			&:focus,
-			&:hover {
-				color: var(--green-500);
-			}
-		}
-
-		:global(.task__button-cancel) {
-			&:focus,
-			&:hover {
-				color: var(--red-500);
-			}
-		}
+	:global(.ssl-ghost[data-is-pointer-dragging='true']) .task :global(.ssl-handle svg circle) {
+		fill: var(--indigo-500);
 	}
 </style>

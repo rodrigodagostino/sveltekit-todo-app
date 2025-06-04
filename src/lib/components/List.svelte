@@ -16,7 +16,6 @@
 		SortableList,
 		SortableItem,
 		sortItems,
-		Handle,
 		type SortableItemData,
 		type DragEndEventDetail,
 	} from '@rodrigodagostino/svelte-sortable-list';
@@ -122,7 +121,7 @@
 				<Button
 					variant="ghost"
 					icon="check"
-					class="list__button-confirm"
+					class="button--confirm"
 					on:click={() => handleListChanges('confirm')}
 				>
 					<svelte:fragment slot="sr-only">{$t('list.confirmChanges')}</svelte:fragment>
@@ -130,18 +129,18 @@
 				<Button
 					variant="ghost"
 					icon="times"
-					class="list__button-cancel"
+					class="button--cancel"
 					on:click={() => handleListChanges('cancel')}
 				>
 					<svelte:fragment slot="sr-only">{$t('list.cancelChanges')}</svelte:fragment>
 				</Button>
-				<Button variant="ghost" icon="pen" class="list__button-edit" on:click={handleEditList}>
+				<Button variant="ghost" icon="pen" class="button--edit" on:click={handleEditList}>
 					<svelte:fragment slot="sr-only">{$t('list.editList')}</svelte:fragment>
 				</Button>
 				<Button
 					variant="ghost"
 					icon="trash-can"
-					class="list__button-remove"
+					class="button--remove"
 					on:click={() => lists.removeList(id)}
 				>
 					<svelte:fragment slot="sr-only">{$t('list.removeList')}</svelte:fragment>
@@ -159,18 +158,13 @@
 		<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
 			{#each tasks as task, index (task.id)}
 				<SortableItem id={task.id} {index}>
-					<div class="list__task">
-						<Handle>
-							<Icon icon="grip-dots-vertical" />
-						</Handle>
-						<Task
-							listId={id}
-							id={task.id}
-							position={task.position}
-							title={task.title}
-							isDone={task.isDone}
-						/>
-					</div>
+					<Task
+						listId={id}
+						id={task.id}
+						position={task.position}
+						title={task.title}
+						isDone={task.isDone}
+					/>
 				</SortableItem>
 			{/each}
 		</SortableList>
@@ -216,129 +210,99 @@
 			}
 		}
 
-		&__header {
-			padding: 1.75rem 1.5rem;
-			background-color: var(--gray-100);
-		}
-
-		&__header-top {
-			display: grid;
-			grid-template-columns: 1fr auto;
-		}
-
-		&__title-placeholder,
-		&__title {
-			grid-column: 1/2;
-			grid-row: 1;
-			font-size: 2rem;
-			font-weight: 700;
-			line-height: 1.1;
-		}
-
-		&__title {
-			height: 100%;
-			padding: 0;
-			margin: 0 0.5rem 0 0;
-			background-color: transparent;
-			border: none;
-			outline: none;
-			box-shadow: 0 0.125rem 0 var(--gray-400);
-			resize: none;
-			overflow: hidden;
-			visibility: hidden;
-
-			&:focus {
-				box-shadow: 0 0.125rem 0 var(--indigo-500);
-			}
-		}
-
-		&__header-bottom {
-			margin-top: 0.25rem;
-		}
-
-		&__subhead {
-			font-size: 1rem;
-			user-select: none;
-		}
-
-		&__actions {
-			display: flex;
-			gap: 0.25rem;
-		}
-
-		:global(.list__button-confirm),
-		:global(.list__button-cancel) {
+		:global(.button--confirm),
+		:global(.button--cancel) {
 			display: none;
 		}
 
-		:global(.list__button-confirm) {
+		:global(.button--confirm) {
 			&:focus,
 			&:hover {
 				color: var(--green-500);
 			}
 		}
 
-		:global(.list__button-cancel) {
+		:global(.button--cancel) {
 			&:focus,
 			&:hover {
 				color: var(--red-500);
 			}
 		}
+	}
 
-		&__content {
-			padding: 1.5rem 1.5rem 2rem;
+	.list__header {
+		padding: 1.75rem 1.5rem;
+		background-color: var(--gray-100);
+	}
 
-			:global(.ssl-handle) {
-				padding: 0.25rem 0.5rem;
+	.list__header-top {
+		display: grid;
+		grid-template-columns: 1fr auto;
+	}
 
-				:global(svg circle) {
-					fill: var(--gray-400);
-					transition: fill 0.24s;
-				}
+	.list__title-placeholder,
+	.list__title {
+		grid-column: 1/2;
+		grid-row: 1;
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 1.1;
+	}
 
-				&:focus,
-				&:hover {
-					:global(svg circle) {
-						fill: var(--indigo-500);
-					}
-				}
-			}
-		}
+	.list__title {
+		height: 100%;
+		padding: 0;
+		margin: 0 0.5rem 0 0;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		box-shadow: 0 0.125rem 0 var(--gray-400);
+		resize: none;
+		overflow: hidden;
+		visibility: hidden;
 
-		&__task {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			border-bottom: 1px solid var(--gray-200);
-			background-color: var(--white);
-			transition: background-color 0.24s;
-		}
-
-		&__form {
-			display: flex;
-			gap: 0.25rem;
-			padding-left: 2rem;
-			margin-top: 1rem;
-		}
-
-		&__form-input {
-			flex: 1;
-			font-size: 1.25rem;
-			background-color: transparent;
-			border: none;
-			border-bottom: 2px solid var(--gray-400);
-			outline: none;
-			transition: border 0.24s;
-
-			&:focus {
-				border-bottom-color: var(--indigo-500);
-			}
+		&:focus {
+			box-shadow: 0 0.125rem 0 var(--indigo-500);
 		}
 	}
 
-	:global(.ssl-ghost[data-is-pointer-dragging='true']) .list__task,
-	:global(.ssl-item[data-is-keyboard-dragging='true']) .list__task {
-		background-color: var(--gray-100);
+	.list__header-bottom {
+		margin-top: 0.25rem;
+	}
+
+	.list__subhead {
+		font-size: 1rem;
+		user-select: none;
+	}
+
+	.list__actions {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.list__content {
+		padding: 1.5rem 1.5rem 2rem;
+	}
+
+	.list__form {
+		display: flex;
+		gap: 0.25rem;
+		padding-left: 2rem;
+		margin-top: 1rem;
+	}
+
+	.list__form-input {
+		flex: 1;
+		font-size: 1.25rem;
+		background-color: transparent;
+		border: none;
+		border-bottom: 2px solid var(--gray-400);
+		outline: none;
+		transition: border 0.24s;
+
+		&:focus {
+			border-bottom-color: var(--indigo-500);
+		}
 	}
 
 	@media screen and (min-width: 48em) {

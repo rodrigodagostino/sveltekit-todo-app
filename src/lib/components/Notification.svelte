@@ -51,39 +51,37 @@
 </div>
 
 <style lang="scss">
-	.notification {
-		&__inner {
-			display: flex;
-			gap: 1rem;
-			align-items: center;
-			padding-block: 0.75rem;
-			padding-inline: 1.25rem 0.75rem;
-			background-color: var(--gray-900);
-			color: var(--gray-050);
-			position: relative;
-		}
+	.notification__inner {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		padding-block: 0.75rem;
+		padding-inline: 1.25rem 0.75rem;
+		background-color: var(--gray-900);
+		color: var(--gray-050);
+		position: relative;
+	}
 
-		&__text {
-			:global(strong) {
-				color: var(--white-rich);
-				font-weight: 600;
-			}
+	.notification__text {
+		:global(strong) {
+			color: var(--white-rich);
+			font-weight: 600;
 		}
+	}
 
-		&__actions {
-			display: flex;
-			gap: 0.5rem;
-		}
+	.notification__actions {
+		display: flex;
+		gap: 0.5rem;
+	}
 
-		&__progress {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: 0.25rem;
-			background-color: var(--indigo-600);
-			animation: progress 8s linear forwards;
-		}
+	.notification__progress {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 0.25rem;
+		background-color: var(--indigo-600);
+		animation: progress 8s linear forwards;
 	}
 
 	@keyframes progress {

@@ -44,7 +44,7 @@
 		{#each $lists as list, index (list.id)}
 			<SortableItem id={list.id} {index}>
 				<button
-					class="tabs__item-button"
+					class="tab"
 					class:is-active={list.id === $selectedListId}
 					on:click={() => ($selectedListId = list.id)}
 				>
@@ -71,42 +71,40 @@
 </nav>
 
 <style lang="scss">
-	.tabs {
-		&__item-button {
-			display: flex;
-			gap: 0.5rem;
-			align-items: center;
-			width: 100%;
-			padding: 1rem 0;
-			background-color: var(--indigo-400);
-			border: none;
-			outline: 3px solid transparent;
-			font-size: 1.5rem;
-			line-height: 1.2;
-			color: var(--white);
-			transition:
-				padding 0.24s,
-				background-color 0.24s,
-				outline 0.24s;
-			cursor: pointer;
+	.tab {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		width: 100%;
+		padding: 0.75rem 0;
+		background-color: var(--indigo-400);
+		border: none;
+		outline: 3px solid transparent;
+		font-size: 1.5rem;
+		line-height: 1.2;
+		color: var(--white);
+		transition:
+			padding 0.24s,
+			background-color 0.24s,
+			outline 0.24s;
+		cursor: pointer;
 
-			&:focus-visible {
-				outline: 3px solid currentColor;
-			}
+		&:focus-visible {
+			outline: 3px solid currentColor;
+		}
 
-			&.is-active {
-				padding: 1rem 1rem 1rem 0.75rem;
-				background-color: var(--indigo-800);
-				font-weight: 600;
-				color: var(--white-rich);
-			}
+		&.is-active {
+			padding-inline-start: 0.5rem;
+			background-color: var(--indigo-800);
+			font-weight: 600;
+			color: var(--white-rich);
 		}
 
 		:global(.ssl-handle) {
 			display: block;
 			flex: 0 0 auto;
 			display: flex;
-			padding: 0.25rem 0.5rem;
+			padding: 0.5rem 0.75rem;
 			cursor: grab;
 
 			:global(svg circle) {
@@ -119,28 +117,6 @@
 				:global(svg circle) {
 					fill: var(--indigo-100);
 				}
-			}
-		}
-
-		&__form {
-			display: flex;
-			gap: 0.25rem;
-			padding-left: 2rem;
-			padding-right: 1rem;
-			margin-top: 1rem;
-		}
-
-		&__form-input {
-			flex: 1;
-			font-size: 1.25rem;
-			background-color: transparent;
-			border: none;
-			border-bottom: 2px solid var(--gray-100);
-			outline: none;
-			transition: border 0.24s;
-
-			&:focus {
-				border-bottom-color: var(--white-rich);
 			}
 		}
 	}
@@ -169,8 +145,30 @@
 		}
 	}
 
-	:global(.ssl-ghost[data-is-pointer-dragging='true']) .tabs__item-button,
-	:global(.ssl-item[data-is-keyboard-dragging='true']) .tabs__item-button {
+	:global(.ssl-ghost[data-is-pointer-dragging='true']) .tab,
+	:global(.ssl-item[data-is-keyboard-dragging='true']) .tab {
 		background-color: var(--indigo-500);
+	}
+
+	.tabs__form {
+		display: flex;
+		gap: 0.25rem;
+		padding-left: 2rem;
+		padding-right: 1rem;
+		margin-top: 1rem;
+	}
+
+	.tabs__form-input {
+		flex: 1;
+		font-size: 1.25rem;
+		background-color: transparent;
+		border: none;
+		border-bottom: 2px solid var(--gray-100);
+		outline: none;
+		transition: border 0.24s;
+
+		&:focus {
+			border-bottom-color: var(--white-rich);
+		}
 	}
 </style>

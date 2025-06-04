@@ -35,25 +35,25 @@
 		grid-column: 1;
 		grid-row: 3;
 		text-align: center;
+	}
 
-		&__arrow {
-			width: 8rem;
-			height: auto;
-			margin-top: 1rem;
-			margin-bottom: 2.5rem;
-			transform: rotate(45deg);
+	.no-lists-message__arrow {
+		width: 8rem;
+		height: auto;
+		margin-top: 1rem;
+		margin-bottom: 2.5rem;
+		transform: rotate(45deg);
 
-			path {
-				fill: var(--indigo-900);
-			}
+		path {
+			fill: var(--indigo-900);
 		}
+	}
 
-		&__text {
-			font-family: 'Gloria Hallelujah';
-			font-size: 2rem;
-			line-height: 1.4;
-			color: var(--indigo-900);
-		}
+	.no-lists-message__text {
+		font-family: 'Gloria Hallelujah';
+		font-size: 2rem;
+		line-height: 1.4;
+		color: var(--indigo-900);
 	}
 
 	@media screen and (min-width: 48em) {
@@ -61,25 +61,23 @@
 			grid-column: 2;
 			grid-row: 2;
 			text-align: left;
+		}
 
-			&__arrow {
-				width: 10rem;
-				margin-top: 2.5rem;
-				margin-bottom: 1rem;
-				transform: none;
-			}
+		.no-lists-message__arrow {
+			width: 10rem;
+			margin-top: 2.5rem;
+			margin-bottom: 1rem;
+			transform: none;
 		}
 	}
 
 	@media screen and (min-width: 61.25em) {
-		.no-lists-message {
-			&__arrow {
-				width: 12rem;
-			}
+		.no-lists-message__arrow {
+			width: 12rem;
+		}
 
-			&__text {
-				font-size: 2.5rem;
-			}
+		.no-lists-message__text {
+			font-size: 2.5rem;
 		}
 	}
 </style>
