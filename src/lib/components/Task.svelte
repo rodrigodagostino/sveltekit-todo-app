@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { dispatch, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
+	import { Remove, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components/index.js';
 	import { lists } from '$lib/stores/index.js';
@@ -59,10 +59,12 @@
 		}
 	};
 
-	const handleRemoveTask = (event: MouseEvent) => {
+	function handleRemoveTask(event: MouseEvent) {
 		const target = event.target as HTMLElement;
-		if (target) dispatch(target, 'removestart', { item: target.closest('.ssl-item') });
-	};
+		const item = target.closest<HTMLLIElement>('.ssl-item');
+		const itemId = item?.dataset.itemId;
+		if (itemId) lists.removeTask(listId, itemId);
+	}
 </script>
 
 <div class="task" class:task--done={isDone} class:is-editing={isEditing}>
@@ -107,14 +109,10 @@
 		<Button variant="ghost" icon="pen" class="task__button-edit" on:click={handleEditTask}>
 			<svelte:fragment slot="sr-only">{$t('list.editTask')}</svelte:fragment>
 		</Button>
-		<Button
-			variant="ghost"
-			icon="trash-can"
-			class="task__button-remove"
-			on:click={handleRemoveTask}
-		>
-			<svelte:fragment slot="sr-only">{$t('list.removeTask')}</svelte:fragment>
-		</Button>
+		<Remove on:click={handleRemoveTask}>
+			<span class="sr-only">{$t('list.removeTask')}</span>
+			<Icon icon="trash-can" />
+		</Remove>
 	</div>
 </div>
 

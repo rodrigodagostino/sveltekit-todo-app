@@ -17,9 +17,8 @@
 		SortableItem,
 		sortItems,
 		Handle,
-		type SortEventDetail,
-		type RemoveEventDetail,
 		type SortableItemData,
+		type DragEndEventDetail,
 	} from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components/index.js';
@@ -86,16 +85,17 @@
 		newTaskTitle = '';
 	};
 
-	function handleSortTask(event: CustomEvent<SortEventDetail>) {
-		const { prevItemIndex, nextItemIndex } = event.detail;
-		const reorderedTasks = sortItems(tasks, prevItemIndex, nextItemIndex);
-		const reorderedList = { id, position, title, tasks: reorderedTasks };
-		lists.editList(id, reorderedList);
-	}
-
-	function handleRemoveTask(event: CustomEvent<RemoveEventDetail>) {
-		const { itemId } = event.detail;
-		lists.removeTask(id, itemId);
+	function handleDragEnd(event: CustomEvent<DragEndEventDetail>) {
+		const { draggedItemIndex, targetItemIndex, isCanceled } = event.detail;
+		if (
+			!isCanceled &&
+			typeof targetItemIndex === 'number' &&
+			draggedItemIndex !== targetItemIndex
+		) {
+			const reorderedTasks = sortItems(tasks, draggedItemIndex, targetItemIndex);
+			const reorderedList = { id, position, title, tasks: reorderedTasks };
+			lists.editList(id, reorderedList);
+		}
 	}
 </script>
 
@@ -156,13 +156,7 @@
 	</header>
 
 	<div class="list__content">
-		<SortableList
-			gap={0}
-			hasLockedAxis={true}
-			hasBoundaries={true}
-			on:sort={handleSortTask}
-			on:remove={handleRemoveTask}
-		>
+		<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
 			{#each tasks as task, index (task.id)}
 				<SortableItem id={task.id} {index}>
 					<div class="list__task">
@@ -342,8 +336,8 @@
 		}
 	}
 
-	:global(.ssl-ghost.is-dragging) .list__task,
-	:global(.ssl-item.is-keyboard-dragging) .list__task {
+	:global(.ssl-ghost[data-is-pointer-dragging='true']) .list__task,
+	:global(.ssl-item[data-is-keyboard-dragging='true']) .list__task {
 		background-color: var(--gray-100);
 	}
 

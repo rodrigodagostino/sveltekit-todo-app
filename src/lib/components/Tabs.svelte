@@ -5,7 +5,7 @@
 		SortableItem,
 		Handle,
 		sortItems,
-		type SortEventDetail,
+		type DragEndEventDetail,
 	} from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button, Icon } from '$lib/components/index.js';
@@ -26,15 +26,21 @@
 		listNewTitle = '';
 	};
 
-	function handleSort(event: CustomEvent<SortEventDetail>) {
-		const { prevItemIndex, nextItemIndex } = event.detail;
-		const reorderedLists = sortItems($lists, prevItemIndex, nextItemIndex);
-		lists.set(reorderedLists);
+	function handleDragEnd(event: CustomEvent<DragEndEventDetail>) {
+		const { draggedItemIndex, targetItemIndex, isCanceled } = event.detail;
+		if (
+			!isCanceled &&
+			typeof targetItemIndex === 'number' &&
+			draggedItemIndex !== targetItemIndex
+		) {
+			const reorderedLists = sortItems($lists, draggedItemIndex, targetItemIndex);
+			lists.set(reorderedLists);
+		}
 	}
 </script>
 
 <nav class="tabs" in:fly={{ y: 32, duration: 320, delay: 320 }}>
-	<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:sort={handleSort}>
+	<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
 		{#each $lists as list, index (list.id)}
 			<SortableItem id={list.id} {index}>
 				<button
@@ -66,8 +72,6 @@
 
 <style lang="scss">
 	.tabs {
-		color: var(--white);
-
 		&__item-button {
 			display: flex;
 			gap: 0.5rem;
@@ -79,6 +83,7 @@
 			outline: 3px solid transparent;
 			font-size: 1.5rem;
 			line-height: 1.2;
+			color: var(--white);
 			transition:
 				padding 0.24s,
 				background-color 0.24s,
@@ -164,8 +169,8 @@
 		}
 	}
 
-	:global(.ssl-ghost.is-dragging) .tabs__item-button,
-	:global(.ssl-item.is-keyboard-dragging) .tabs__item-button {
+	:global(.ssl-ghost[data-is-pointer-dragging='true']) .tabs__item-button,
+	:global(.ssl-item[data-is-keyboard-dragging='true']) .tabs__item-button {
 		background-color: var(--indigo-500);
 	}
 </style>

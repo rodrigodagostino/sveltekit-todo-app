@@ -12,8 +12,8 @@ importers:
         specifier: 9.28.0
         version: 9.28.0
       '@rodrigodagostino/svelte-sortable-list':
-        specifier: 0.10.6
-        version: 0.10.6(svelte@4.2.20)
+        specifier: 0.12.1
+        version: 0.12.1(svelte@4.2.20)
       '@sveltejs/adapter-auto':
         specifier: 6.0.1
         version: 6.0.1(@sveltejs/kit@2.21.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.20)(vite@5.4.19(sass@1.89.1)))(svelte@4.2.20)(vite@5.4.19(sass@1.89.1)))
@@ -393,8 +393,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@rodrigodagostino/svelte-sortable-list@0.10.6':
-    resolution: {integrity: sha512-ld1ZqB2k8cQOpOfXWrnEunjLs6XhsAyR2v808vI71y7k+DpQLwfH1H6TVqbDPArJAGQDJYMrAqFkeYUZUUZy2A==}
+  '@rodrigodagostino/svelte-sortable-list@0.12.1':
+    resolution: {integrity: sha512-y0VhszqHmqklC3W7KTTpvPgyZ/3L5XERRzrRHIg2vVypW+hO7+56AFgA7s+W3HjLuFlqUSNr57GfFXOEHP9www==}
     peerDependencies:
       svelte: ^4.0.0
 
@@ -1517,7 +1517,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@rodrigodagostino/svelte-sortable-list@0.10.6(svelte@4.2.20)':
+  '@rodrigodagostino/svelte-sortable-list@0.12.1(svelte@4.2.20)':
     dependencies:
       svelte: 4.2.20
 
