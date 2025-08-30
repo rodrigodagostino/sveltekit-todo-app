@@ -1,7 +1,6 @@
-import type { Actions, PageServerLoad } from './$types';
 import type { IList } from '$lib/components/List.svelte';
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load = async ({ cookies }) => {
 	const lists: IList[] = JSON.parse(cookies.get('lists') || '[]');
 
 	return {
@@ -10,7 +9,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	};
 };
 
-export const actions: Actions = {
+export const actions = {
 	setLocale: async ({ request, cookies }) => {
 		const formData = await request.formData();
 		const locale = String(formData.get('locale'));

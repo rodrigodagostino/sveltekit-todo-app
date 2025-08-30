@@ -1,6 +1,4 @@
-import type { LayoutServerLoad } from './$types';
-
-export const load: LayoutServerLoad = async ({ cookies }) => {
+export const load = async ({ cookies }) => {
 	const locale = cookies.get('locale');
 
 	return { locale };

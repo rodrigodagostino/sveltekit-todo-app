@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { List, NoListsMessage, Tabs } from '$lib/components';
-	import { selectedListId, lists } from '$lib/stores';
+	import { List, NoListsMessage, Tabs } from '$lib/components/index.js';
+	import { selectedListId, lists } from '$lib/stores/index.js';
 
 	export let data;
 

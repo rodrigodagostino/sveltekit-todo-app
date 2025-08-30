@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
-	import { Button } from '$lib/components';
-	import { t } from '$lib/translations';
+	import { Button } from '$lib/components/index.js';
+	import { t } from '$lib/translations/index.js';
 </script>
 
 <section class="error">

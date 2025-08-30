@@ -1,7 +1,6 @@
-import type { LayoutLoad } from './$types';
-import { loadTranslations } from '$lib/translations';
+import { loadTranslations } from '$lib/translations/index.js';
 
-export const load: LayoutLoad = async ({ data, url }) => {
+export const load = async ({ data, url }) => {
 	const { locale } = data;
 	const { pathname } = url;
 
