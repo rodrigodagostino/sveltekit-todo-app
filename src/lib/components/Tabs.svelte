@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import {
-		SortableList,
-		SortableItem,
-		Handle,
-		sortItems,
-		type DragEndEventDetail,
-	} from '@rodrigodagostino/svelte-sortable-list';
+	import { SortableList, sortItems } from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button, Icon } from '$lib/components/index.js';
 	import { lists, selectedListId } from '$lib/stores/index.js';
@@ -26,7 +20,7 @@
 		listNewTitle = '';
 	};
 
-	function handleDragEnd(event: CustomEvent<DragEndEventDetail>) {
+	function handleDragEnd(event: SortableList.RootEvents['dragend']) {
 		const { draggedItemIndex, targetItemIndex, isCanceled } = event.detail;
 		if (
 			!isCanceled &&
@@ -40,22 +34,22 @@
 </script>
 
 <nav class="tabs" in:fly={{ y: 32, duration: 320, delay: 320 }}>
-	<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
+	<SortableList.Root gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
 		{#each $lists as list, index (list.id)}
-			<SortableItem id={list.id} {index}>
+			<SortableList.Item id={list.id} {index}>
 				<button
 					class="tab"
 					class:is-active={list.id === $selectedListId}
 					on:click={() => ($selectedListId = list.id)}
 				>
-					<Handle>
+					<SortableList.ItemHandle>
 						<Icon icon="grip-dots-vertical" />
-					</Handle>
+					</SortableList.ItemHandle>
 					<span class="tabs__item-label">{list.title}</span>
 				</button>
-			</SortableItem>
+			</SortableList.Item>
 		{/each}
-	</SortableList>
+	</SortableList.Root>
 	<form class="tabs__form" on:submit|preventDefault={handleAddList}>
 		<input
 			type="text"
@@ -100,7 +94,7 @@
 			color: var(--white-rich);
 		}
 
-		:global(.ssl-handle) {
+		:global(.ssl-item-handle) {
 			display: block;
 			flex: 0 0 auto;
 			display: flex;
@@ -121,32 +115,26 @@
 		}
 	}
 
-	:global(.ssl-list),
-	:global(.ssl-item__inner) {
+	:global(.ssl-root) {
 		outline: 3px solid transparent;
-	}
-
-	:global(.ssl-list):focus-visible {
-		outline: 3px solid var(--gray-800);
 		transition: outline 0.24s;
 	}
 
-	:global(.ssl-item__inner) {
-		transition: outline 0.24s;
+	:global(.ssl-root:focus-visible),
+	:global(.ssl-item:focus-visible) .tab {
+		outline-color: var(--gray-800);
 	}
 
 	:global(.ssl-item) {
 		outline: none;
-
-		&:focus-within:focus-visible {
-			:global(.ssl-item__inner) {
-				outline: 3px solid var(--gray-800);
-			}
-		}
 	}
 
-	:global(.ssl-ghost[data-is-pointer-dragging='true']) .tab,
-	:global(.ssl-item[data-is-keyboard-dragging='true']) .tab {
+	:global(.ssl-item[data-drag-state*='ptr'][data-is-ghost='false']) .tab {
+		opacity: 0;
+	}
+
+	:global(.ssl-item[data-drag-state*='ptr-drag'][data-is-ghost='true']) .tab,
+	:global(.ssl-item[data-drag-state*='kbd-drag']) .tab {
 		background-color: var(--indigo-500);
 	}
 

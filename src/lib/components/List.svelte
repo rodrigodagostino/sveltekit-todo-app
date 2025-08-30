@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import Task, { type ITask } from './Task.svelte';
 
-	export interface IList extends SortableItemData {
+	export interface IList extends SortableList.ItemData {
 		id: string;
 		position: number;
 		title: string;
@@ -12,19 +12,12 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import {
-		SortableList,
-		SortableItem,
-		sortItems,
-		type SortableItemData,
-		type DragEndEventDetail,
-	} from '@rodrigodagostino/svelte-sortable-list';
+	import { SortableList, sortItems } from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components/index.js';
 	import { lists } from '$lib/stores/index.js';
 	import { fadeScale } from '$lib/transitions/index.js';
 	import { t } from '$lib/translations/index.js';
-	import Icon from './Icon.svelte';
 
 	export let id: IList['id'];
 	export let position: IList['position'];
@@ -84,7 +77,7 @@
 		newTaskTitle = '';
 	};
 
-	function handleDragEnd(event: CustomEvent<DragEndEventDetail>) {
+	function handleDragEnd(event: SortableList.RootEvents['dragend']) {
 		const { draggedItemIndex, targetItemIndex, isCanceled } = event.detail;
 		if (
 			!isCanceled &&
@@ -155,9 +148,9 @@
 	</header>
 
 	<div class="list__content">
-		<SortableList gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
+		<SortableList.Root gap={0} hasLockedAxis={true} hasBoundaries={true} on:dragend={handleDragEnd}>
 			{#each tasks as task, index (task.id)}
-				<SortableItem id={task.id} {index}>
+				<SortableList.Item id={task.id} {index}>
 					<Task
 						listId={id}
 						id={task.id}
@@ -165,9 +158,9 @@
 						title={task.title}
 						isDone={task.isDone}
 					/>
-				</SortableItem>
+				</SortableList.Item>
 			{/each}
-		</SortableList>
+		</SortableList.Root>
 		<form class="list__form" on:submit|preventDefault={handleAddTask}>
 			<input
 				type="text"

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export interface ITask extends SortableItemData {
+	export interface ITask extends SortableList.ItemData {
 		listId: string;
 		id: string;
 		position: number;
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { Handle, Remove, type SortableItemData } from '@rodrigodagostino/svelte-sortable-list';
+	import { SortableList } from '@rodrigodagostino/svelte-sortable-list';
 
 	import { Button } from '$lib/components/index.js';
 	import { lists } from '$lib/stores/index.js';
@@ -68,9 +68,9 @@
 </script>
 
 <div class="task" class:task--done={isDone} class:is-editing={isEditing}>
-	<Handle>
+	<SortableList.ItemHandle>
 		<Icon icon="grip-dots-vertical" />
-	</Handle>
+	</SortableList.ItemHandle>
 	<input
 		bind:this={statusRef}
 		type="checkbox"
@@ -112,10 +112,10 @@
 		<Button variant="ghost" icon="pen" class="button--edit" on:click={handleEditTask}>
 			<svelte:fragment slot="sr-only">{$t('list.editTask')}</svelte:fragment>
 		</Button>
-		<Remove class="button button--ghost" on:click={handleRemoveTask}>
+		<SortableList.ItemRemove class="button button--ghost" on:click={handleRemoveTask}>
 			<span class="sr-only">{$t('list.removeTask')}</span>
 			<Icon icon="trash-can" />
-		</Remove>
+		</SortableList.ItemRemove>
 	</div>
 </div>
 
@@ -128,9 +128,13 @@
 		padding-block: 0.5rem;
 		background-color: var(--white);
 		border-bottom: 1px solid var(--gray-200);
-		transition: background-color 0.24s;
+		outline: 3px solid transparent;
+		transition:
+			padding 0.24s,
+			background-color 0.24s,
+			outline 0.24s;
 
-		:global(.ssl-handle) {
+		:global(.ssl-item-handle) {
 			padding: 0.5rem;
 			margin-inline-end: 0.5rem;
 
@@ -186,9 +190,21 @@
 		}
 	}
 
+	:global(.ssl-item:focus-visible) .task {
+		outline-color: var(--gray-800);
+	}
+
 	.task__status {
 		flex-shrink: 0;
 		margin: 0;
+		border-radius: 0.25em;
+		outline: none;
+		box-shadow: 0 0 0 3px transparent;
+		transition: box-shadow 0.24s;
+
+		&:focus-visible {
+			box-shadow: 0 0 0 3px var(--indigo-500);
+		}
 	}
 
 	.task__title-placeholder,
@@ -236,12 +252,18 @@
 		}
 	}
 
-	:global(.ssl-ghost[data-is-pointer-dragging='true']) .task,
-	:global(.ssl-item[data-is-keyboard-dragging='true']) .task {
+	:global(.ssl-item[data-drag-state*='ptr'][data-is-ghost='false']) .task {
+		opacity: 0;
+	}
+
+	:global(.ssl-item[data-drag-state*='ptr-drag'][data-is-ghost='true']) .task,
+	:global(.ssl-item[data-drag-state*='kbd-drag']) .task {
 		background-color: var(--gray-100);
 	}
 
-	:global(.ssl-ghost[data-is-pointer-dragging='true']) .task :global(.ssl-handle svg circle) {
+	:global(.ssl-item[data-drag-state*='ptr-drag'][data-is-ghost='true'])
+		.task
+		:global(.ssl-item-handle svg circle) {
 		fill: var(--indigo-500);
 	}
 </style>
